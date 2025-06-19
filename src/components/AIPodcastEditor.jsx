@@ -1,91 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { Play, Scissors, Wand2, Download, Star, Users, Clock, Zap, CheckCircle, ArrowRight, Menu, X } from 'lucide-react';
+import React from 'react';
+import { Play, Zap, CheckCircle, ArrowRight} from 'lucide-react';
+import Header from './Header';
+import Footer from './Footer';
+import { Link } from 'react-router-dom';
+import { features } from '../data/features'
 
 const AIPodcastEditor = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const features = [
-    {
-      icon: <Scissors className="w-8 h-8" />,
-      title: "Pro Audio Enhancement",
-      description: "Removes filler words, long pauses, background noise, and normalizes audio levels for crystal-clear Russian and English speech"
-    },
-    {
-      icon: <Wand2 className="w-8 h-8" />,
-      title: "Auto Video Assembly",
-      description: "Seamlessly stitches together video fragments for smooth storytelling flow"
-    },
-    {
-      icon: <Play className="w-8 h-8" />,
-      title: "Viral Clips Generator",
-      description: "Creates engaging short-form content for TikTok, Reels, and YouTube Shorts with trending music"
-    },
-    {
-      icon: <Download className="w-8 h-8" />,
-      title: "One-Click Export",
-      description: "Export in multiple formats optimized for different social media platforms"
-    }
-  ];
-
-  const stats = [
-    { number: "5M+", label: "Content Creators Served" },
-    { number: "90%", label: "Time Saved on Editing" },
-    { number: "50+", label: "Languages Supported" },
-    { number: "4.9★", label: "User Rating" }
-  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
-      {/* Navigation */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrollY > 50 ? 'bg-black/20 backdrop-blur-md' : 'bg-transparent'}`}>
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <Wand2 className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold">AI EditPro</span>
-            </div>
-            
-            <div className="hidden md:flex items-center space-x-8">
-              <a href="#features" className="hover:text-purple-300 transition-colors">Features</a>
-              <a href="#pricing" className="hover:text-purple-300 transition-colors">Pricing</a>
-              <a href="#testimonials" className="hover:text-purple-300 transition-colors">Reviews</a>
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                Get Started
-              </button>
-            </div>
-
-            <button 
-              className="md:hidden"
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-            >
-              {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden bg-black/90 backdrop-blur-md">
-            <div className="px-6 py-4 space-y-4">
-              <a href="#features" className="block hover:text-purple-300">Features</a>
-              <a href="#pricing" className="block hover:text-purple-300">Pricing</a>
-              <a href="#testimonials" className="block hover:text-purple-300">Reviews</a>
-              <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold">
-                Get Started
-              </button>
-            </div>
-          </div>
-        )}
-      </nav>
+      <Header />
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 px-6">
@@ -110,28 +34,18 @@ const AIPodcastEditor = () => {
             </p>
             
             <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6 mb-12">
-              <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
-                <span>Start Creating Now</span>
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              <button className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
+              <Link to="/editor">
+                <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
+                  <span>Start Creating Now</span>
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
+              <a href="#demo" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
                 <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                   <Play className="w-5 h-5 ml-1" />
                 </div>
                 <span>Watch Demo</span>
-              </button>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 max-w-4xl mx-auto">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                    {stat.number}
-                  </div>
-                  <div className="text-gray-400 text-sm md:text-base">{stat.label}</div>
-                </div>
-              ))}
+              </a>
             </div>
           </div>
         </div>
@@ -173,7 +87,7 @@ const AIPodcastEditor = () => {
       </section>
 
       {/* Demo Section */}
-      <section className="py-20 px-6">
+      <section id="demo" className="py-20 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12">
             <div className="grid md:grid-cols-2 gap-12 items-center">
@@ -227,7 +141,7 @@ const AIPodcastEditor = () => {
               Simple, <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Transparent</span> Pricing
             </h2>
             <p className="text-xl text-gray-300">
-              Made for local creators with full support for Russian and Kazakh speech
+              Made for local creators with full support for English and Russian speech
             </p>
           </div>
 
@@ -327,10 +241,12 @@ const AIPodcastEditor = () => {
             </p>
             
             <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
-                <span>Start Free Trial</span>
-                <ArrowRight className="w-5 h-5" />
-              </button>
+              <Link to="/editor">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
+                  <span>Start Free Trial</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </Link>
               <div className="text-gray-400 text-sm">
                 ✓ No credit card required  ✓ Cancel anytime
               </div>
@@ -339,28 +255,7 @@ const AIPodcastEditor = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 border-t border-white/10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row items-center justify-between">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-                <Wand2 className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xl font-bold">AI EditPro</span>
-            </div>
-            
-            <div className="flex items-center space-x-6 text-gray-400">
-              <a href="#" className="hover:text-white transition-colors">Privacy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms</a>
-              <a href="#" className="hover:text-white transition-colors">Support</a>
-              <div className="text-sm">
-                Made in n!
-              </div>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer/>
     </div>
   );
 };
