@@ -4,9 +4,11 @@ import {
   Routes,
   Route,
 } from "react-router-dom";
-import AIPodcastEditor from './components/AIPodcastEditor'
-import NotFoundPage from './components/NotFoundPage';
-import AudioVideoUpload from './components/AudioVideoUpload';
+import Home from './pages/Home'
+import NotFoundPage from './pages/NotFoundPage';
+import AudioVideoUpload from './pages/AudioVideoUpload';
+import Profile from './pages/Profile';
+import AuthPage from './pages/AuthPage';
 
 function App() {
 
@@ -15,10 +17,10 @@ function App() {
        <Router>
 
             <Routes>
-                <Route path="/" element={<AIPodcastEditor />} />
-                {/* <Route path='/login' element={<Login/>}/>
-                <Route path="/signup" element={<SignUp />} /> */}
+                <Route path="/" element={<Home />} />
+                <Route path='/login' element={<AuthPage/>}/>
                 <Route path="/editor" element={<AudioVideoUpload />} />
+                <Route path="/profile" element={<Profile/>} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>

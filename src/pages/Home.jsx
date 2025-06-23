@@ -1,11 +1,11 @@
 import React from 'react';
 import { Play, Zap, CheckCircle, ArrowRight} from 'lucide-react';
-import Header from './Header';
-import Footer from './Footer';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import { features } from '../data/features'
 
-const AIPodcastEditor = () => {
+const Home = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
@@ -29,7 +29,6 @@ const AIPodcastEditor = () => {
             </h1>
             
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-              The first AI editor that understands Russian & English speech. 
               Automatically clean, edit, and create viral clips from your podcasts and videos.
             </p>
             
@@ -165,7 +164,7 @@ const AIPodcastEditor = () => {
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>2 viral clips per video</span>
+                  <span>1 viral clip per video</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
@@ -188,7 +187,7 @@ const AIPodcastEditor = () => {
               
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">Pro</h3>
-                <div className="text-4xl font-bold mb-2">6,500 ₸</div>
+                <div className="text-4xl font-bold mb-2">4,990 ₸</div>
                 <div className="text-gray-400 mb-4">per month</div>
                 <p className="text-gray-300">For serious content creators</p>
               </div>
@@ -204,19 +203,15 @@ const AIPodcastEditor = () => {
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Up to 10 viral clips per video</span>
+                  <span>Up to 5 viral clips per video</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>4K export quality</span>
+                  <span>1080p export quality</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
                   <span>Custom templates & music</span>
-                </li>
-                <li className="flex items-center space-x-3">
-                  <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Priority support</span>
                 </li>
               </ul>
               
@@ -260,4 +255,4 @@ const AIPodcastEditor = () => {
   );
 };
 
-export default AIPodcastEditor;
+export default Home;
