@@ -118,13 +118,13 @@ const Home = () => {
               </div>
               
               <div className="relative">
-                <div className="aspect-video bg-black/30 rounded-2xl flex items-center justify-center border border-white/10 hover:border-purple-500/50 transition-colors cursor-pointer group">
-                  <div className="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center group-hover:bg-purple-500/50 transition-colors">
-                    <Play className="w-8 h-8 ml-1" />
-                  </div>
-                </div>
+                <video
+                  src="public/videos/demo.mp4"
+                  controls
+                  className="w-full rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all"
+                />
                 <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                  3 min demo
+                  1 min demo
                 </div>
               </div>
             </div>

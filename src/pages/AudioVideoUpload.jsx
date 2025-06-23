@@ -368,7 +368,7 @@ export default function AudioVideoUpload() {
                 )}
 
                 {processResult && (
-                  <div className="p-4 bg-green-600/10 border border-green-600/30 rounded-lg">
+                  <div className="p-4 bg-green-600/10 border border-green-600/30 rounded-lg mb-6">
                     <div className="flex items-center space-x-2 mb-2">
                       <CheckCircle2 className="w-5 h-5 text-green-400" />
                       <h5 className="text-green-400 font-medium">Processing Complete!</h5>
@@ -387,6 +387,26 @@ export default function AudioVideoUpload() {
                           </a>
                         </p>
                       )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Summary Box */}
+                {processResult && processResult.summary && (
+                  <div className="mb-8 max-w-2xl mx-auto">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="text-lg font-bold text-white">Summary</h3>
+                      <button
+                        className="text-purple-400 hover:text-purple-200 px-3 py-1 rounded transition-colors border border-purple-400 hover:bg-purple-500/20 text-sm"
+                        onClick={() => {
+                          navigator.clipboard.writeText(processResult.summary);
+                        }}
+                      >
+                        Copy
+                      </button>
+                    </div>
+                    <div className="bg-slate-800/80 border border-purple-700 rounded-lg p-4 text-gray-200 whitespace-pre-line text-base font-mono overflow-x-auto">
+                      {processResult.summary}
                     </div>
                   </div>
                 )}
