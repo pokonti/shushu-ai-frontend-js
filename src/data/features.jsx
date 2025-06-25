@@ -4,21 +4,21 @@ export const features = [
     {
       icon: <Scissors className="w-8 h-8" />,
       title: "Pro Audio Enhancement",
-      description: "Removes filler words, long pauses, background noise, and normalizes audio levels for crystal-clear Russian and English speech"
+      description: "Elevate your audio quality with advanced noise reduction, equalization, and mastering tools for crystal-clear sound."
     },
     {
       icon: <Wand2 className="w-8 h-8" />,
       title: "Auto Video Assembly",
-      description: "Seamlessly stitches together video fragments for smooth storytelling flow"
+      description: "Effortlessly combine your clips into cohesive videos with AI-powered scene detection and smart transitions."
     },
     {
       icon: <Play className="w-8 h-8" />,
       title: "Viral Clips Generator",
-      description: "Creates engaging short-form content for TikTok, Reels, and YouTube Shorts with trending music"
+      description: "Instantly create captivating short videos optimized for social media, maximizing your reach and engagement."
     },
     {
       icon: <Download className="w-8 h-8" />,
       title: "One-Click Export",
-      description: "Export in multiple formats optimized for different social media platforms"
+      description: "Seamlessly export your finished projects in various formats with a single click, ready for any platform or device."
     }
 ];

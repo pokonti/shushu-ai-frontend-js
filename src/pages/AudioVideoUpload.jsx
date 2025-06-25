@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Video, Music, Loader2, CheckCircle2, X, AlertCircle, Play, ArrowLeft, } from 'lucide-react';
 import AuthService from '../services/authService';
+import MiniHeader from '../components/MiniHeader';
+import { useTranslation } from 'react-i18next';
 
 export default function AudioVideoUpload() {
+  const { t } = useTranslation();
   const [file, setFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -49,53 +52,44 @@ export default function AudioVideoUpload() {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      const droppedFile = e.dataTransfer.files[0];
-      if (isValidFile(droppedFile)) {
-        setFile(droppedFile);
-        setFileType(getFileType(droppedFile));
-        resetStates();
-      }
+      handleFile(e.dataTransfer.files[0]);
     }
   };
 
   const handleFileSelect = (e) => {
     if (e.target.files && e.target.files[0]) {
-      const selectedFile = e.target.files[0];
-      if (isValidFile(selectedFile)) {
-        setFile(selectedFile);
-        setFileType(getFileType(selectedFile));
-        resetStates();
-      }
+      handleFile(e.target.files[0]);
     }
   };
 
-  const isValidFile = (file) => {
-    const validExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm', '.mp3', '.wav', '.m4a', '.aac', '.flac'];
-    return validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
-  };
-
-  const getFileType = (file) => {
-    const videoExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm'];
-    const audioExtensions = ['.mp3', '.wav', '.m4a', '.aac', '.flac'];
-    
-    const fileName = file.name.toLowerCase();
-    
-    if (videoExtensions.some(ext => fileName.endsWith(ext))) {
-      return 'video';
-    } else if (audioExtensions.some(ext => fileName.endsWith(ext))) {
-      return 'audio';
+  const handleFile = (selectedFile) => {
+    const type = selectedFile.type.startsWith('video') ? 'video' : selectedFile.type.startsWith('audio') ? 'audio' : null;
+    if (type) {
+      setFile(selectedFile);
+      setFileType(type);
+      setError(null);
+      resetStates();
+    } else {
+      setFile(null);
+      setFileType(null);
+      setError('Unsupported file type. Please upload a video or audio file.');
     }
-    return null;
   };
 
   const resetStates = () => {
+    setUploading(false);
+    setProcessing(false);
+    setProgress(0);
+    setProgressMessage('');
     setUploadResult(null);
     setProcessResult(null);
     setError(null);
-    setProgress(0);
-    setProgressMessage('');
+    setOptions({
+      denoise: false,
+      removeFillers: false,
+      summarize: false
+    });
   };
 
   const uploadFile = async (fileToUpload, fileType, options) => {
@@ -142,11 +136,11 @@ export default function AudioVideoUpload() {
 
       // Update progress messages
       if (newProgress < 30) {
-        setProgressMessage('Initializing processing...');
+        setProgressMessage(t('initializing'));
       } else if (newProgress < 60) {
-        setProgressMessage(`Processing ${fileType}...`);
+        setProgressMessage(`${t('processing')} ${fileType}...`);
       } else if (newProgress < 90) {
-        setProgressMessage('Finalizing...');
+        setProgressMessage(t('finalizing'));
       }
 
       if (currentStep >= steps) {
@@ -166,370 +160,274 @@ export default function AudioVideoUpload() {
     }
   };
 
-  const handleOptionChange = (option) => {
-    setOptions(prev => ({
-      ...prev,
-      [option]: !prev[option]
-    }));
-  };
-
   const handleProcess = async () => {
-    if (!file || !fileType) return;
-    
-    setError(null);
+    if (!file) return;
+
     setUploading(true);
     setProgress(0);
-    setProgressMessage('Uploading file...');
-    
+    setProgressMessage(t('uploading'));
+    setError(null);
+    setUploadResult(null);
+    setProcessResult(null);
+
+    let progressInterval = null;
+
     try {
-      // Upload and process in one call
-      const uploadResponse = await uploadFile(file, fileType, options);
-      setUploadResult(uploadResponse);
+      const uploadRes = await uploadFile(file, fileType, options);
+      setUploadResult(uploadRes);
       setUploading(false);
-      
-      // Start processing
       setProcessing(true);
-      setProgress(10);
-      setProgressMessage('Processing...');
-      
-      // Start progress simulation
-      const progressInterval = simulateProgress();
-      
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Clear progress simulation and set completion
-      clearInterval(progressInterval);
+      setProgressMessage(`${t('processing')} ${fileType}...`);
+
+      // Start simulating processing progress
+      progressInterval = simulateProgress();
+
+      const processRes = await fetch(`${API_BASE_URL}/process`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ filename: uploadRes.filename }),
+      });
+
+      if (!processRes.ok) {
+        const errorData = await processRes.json();
+        throw new Error(errorData.detail || 'Processing failed');
+      }
+
+      const result = await processRes.json();
+      setProcessResult(result);
       setProgress(100);
-      setProgressMessage('Processing complete!');
-      setProcessResult(uploadResponse);
-      setProcessing(false);
-      
-    } catch (error) {
-      setError(error.message);
+      setProgressMessage('Done!');
+
+    } catch (err) {
+      console.error('Error during process:', err);
+      setError(err.message);
       setUploading(false);
       setProcessing(false);
       setProgress(0);
       setProgressMessage('');
+    } finally {
+      if (progressInterval) {
+        clearInterval(progressInterval);
+      }
     }
   };
 
-  const getFileIcon = (file) => {
-    if (fileType === 'video') {
-      return <Video className="w-8 h-8 text-purple-400" />;
-    }
-    return <Music className="w-8 h-8 text-purple-400" />;
-  };
-
-  const formatFileSize = (bytes) => {
-    if (bytes === 0) return '0 Bytes';
-    const k = 1024;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  const handleOptionChange = (optionName) => {
+    setOptions(prevOptions => ({
+      ...prevOptions,
+      [optionName]: !prevOptions[optionName]
+    }));
   };
 
   const isProcessing = uploading || processing;
 
   return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white">
+      <MiniHeader />
 
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="bg-slate-800/50 backdrop-blur-sm border-b border-purple-800/30">
-        <div className="max-w-6xl mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <button 
-                onClick={() => window.location.href = '/'} 
-                className="text-purple-400 hover:text-purple-300 transition-colors"
-              >
-                <ArrowLeft className="w-6 h-6" />
-              </button>
-            </div>
-            
-          </div>
-        </div>
-      </div>
-      <div className="container mx-auto px-6 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center space-x-2 bg-purple-800/30 text-purple-300 px-4 py-2 rounded-full text-sm mb-6">
-            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-            <span>AI-Powered Media Processor</span>
-          </div>
-          
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Transform Your Media
-            <br />
-            <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              With AI Processing
-            </span>
-          </h1>
-          
-          <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Upload your audio or video files and let our AI process them with advanced algorithms
-            tailored for each media type.
-          </p>
-        </div>
+      <div className="max-w-7xl mx-auto px-6 py-12 pt-24">
+        <h1 className="text-4xl md:text-5xl font-bold text-center mb-12">
+          {t('dropMedia')}
+        </h1>
 
-        {/* Block upload if not logged in */}
-        {!isLoggedIn ? (
-          <div className="max-w-2xl mx-auto bg-slate-800/60 border border-purple-800/30 rounded-2xl p-10 text-center shadow-lg">
-            <h2 className="text-2xl font-bold text-white mb-4">Please log in to upload your media</h2>
-            <p className="text-gray-300 mb-6">You must be logged in to use the AI-powered media processor. <br/> <a href="/login" className="text-purple-400 underline hover:text-purple-300">Log in</a> to get started.</p>
+        {error && (
+          <div className="bg-red-900/30 border border-red-500/50 text-red-300 p-4 rounded-xl flex items-center space-x-3 mb-8">
+            <AlertCircle className="w-6 h-6" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {!file ? (
+          <div
+            className={`border-2 border-dashed rounded-xl p-12 text-center transition-all ${
+              dragActive 
+                ? 'border-purple-400 bg-purple-400/10' 
+                : 'border-gray-600 hover:border-purple-500 hover:bg-purple-500/5'
+            }`}
+            onDragEnter={handleDrag}
+            onDragLeave={handleDrag}
+            onDragOver={handleDrag}
+            onDrop={handleDrop}
+          >
+            <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-white mb-2">
+              {t('dropMedia')}
+            </h3>
+            <p className="text-gray-400 mb-6">
+              {t('supportsFiles')}
+            </p>
+            <button
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105"
+            >
+              {t('chooseFile')}
+            </button>
+            <input
+              ref={fileInputRef}
+              type="file"
+              className="hidden"
+              accept=".mp4,.mov,.mkv,.avi,.webm,.mp3,.wav,.m4a,.aac,.flac"
+              onChange={handleFileSelect}
+            />
           </div>
         ) : (
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-purple-800/30 p-8 mb-8">
-            {!file ? (
-              <div
-                className={`border-2 border-dashed rounded-xl p-12 text-center transition-all ${
-                  dragActive 
-                    ? 'border-purple-400 bg-purple-400/10' 
-                    : 'border-gray-600 hover:border-purple-500 hover:bg-purple-500/5'
-                }`}
-                onDragEnter={handleDrag}
-                onDragLeave={handleDrag}
-                onDragOver={handleDrag}
-                onDrop={handleDrop}
-              >
-                <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">
-                  Drop your media file here, or browse
-                </h3>
-                <p className="text-gray-400 mb-6">
-                  Supports video files (MP4, MOV, MKV, AVI, WEBM) and audio files (MP3, WAV, M4A, AAC, FLAC)
-                </p>
-                <button
-                  onClick={() => fileInputRef.current?.click()}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105"
-                >
-                  Choose File
-                </button>
-                <input
-                  ref={fileInputRef}
-                  type="file"
-                  className="hidden"
-                  accept=".mp4,.mov,.mkv,.avi,.webm,.mp3,.wav,.m4a,.aac,.flac"
-                  onChange={handleFileSelect}
-                />
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-purple-800/30 p-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                {fileType === 'video' ? (
+                  <Video className="w-6 h-6 text-purple-400" />
+                ) : (
+                  <Music className="w-6 h-6 text-pink-400" />
+                )}
+                <span className="text-lg font-semibold">{file.name}</span>
+                <span className="text-gray-400 text-sm">({(file.size / (1024 * 1024)).toFixed(2)} MB)</span>
               </div>
-            ) : (
-              <div className="border border-purple-800/30 rounded-xl p-6 bg-slate-700/30">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center space-x-4">
-                    {getFileIcon(file)}
-                    <div>
-                      <h4 className="text-white font-medium">{file.name}</h4>
-                      <div className="flex items-center space-x-4 text-sm">
-                        <span className="text-gray-400">{formatFileSize(file.size)}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          fileType === 'video' ? 'bg-purple-600/30 text-purple-300' : 'bg-pink-600/30 text-pink-300'
-                        }`}>
-                          {fileType?.toUpperCase()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
+              <button onClick={removeFile} className="text-gray-400 hover:text-white transition-colors">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {isProcessing ? (
+              <div className="text-center py-12">
+                <Loader2 className="w-12 h-12 text-purple-400 mx-auto mb-4 animate-spin" />
+                <p className="text-xl font-semibold mb-2">{progressMessage}</p>
+                <div className="w-full bg-gray-700 rounded-full h-2.5 mb-4">
+                  <div
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 h-2.5 rounded-full"
+                    style={{ width: `${progress}%` }}
+                  ></div>
+                </div>
+                <p className="text-gray-400 text-sm">{Math.round(progress)}%</p>
+              </div>
+            ) : processResult ? (
+              <div className="text-center py-12">
+                <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-4" />
+                <h3 className="text-2xl font-bold text-white mb-2">{t('success')}</h3>
+                <p className="text-gray-400 mb-6">
+                  Your {fileType} has been successfully processed.
+                </p>
+                <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4">
+                  <a
+                    href={processResult.output_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 flex items-center space-x-2"
+                  >
+                    <Play className="w-5 h-5" />
+                    <span>View Processed {fileType?.charAt(0).toUpperCase() + fileType?.slice(1)}</span>
+                  </a>
                   <button
                     onClick={removeFile}
-                    className="text-gray-400 hover:text-red-400 transition-colors"
-                    disabled={isProcessing}
+                    className="border border-gray-600 text-gray-300 px-8 py-3 rounded-full font-medium hover:border-purple-500 hover:text-white transition-all transform hover:scale-105"
                   >
-                    <X className="w-5 h-5" />
+                    Upload New File
                   </button>
                 </div>
-                
-                {/* Progress Bar */}
-                {isProcessing && (
-                  <div className="mb-4">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-gray-300">{progressMessage}</span>
-                      <span className="text-sm text-purple-300">{Math.round(progress)}%</span>
+              </div>
+            ) : (
+              <div className="py-6">
+                <h2 className="text-2xl font-bold text-white mb-6 text-center">Processing Options</h2>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  {/* Denoise Option */}
+                  <div
+                    className={`flex flex-col items-center p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
+                      options.denoise ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
+                    }`}
+                    onClick={() => handleOptionChange('denoise')}
+                  >
+                    {/* Tick at top right */}
+                    {options.denoise && (
+                      <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-6 h-6 flex items-center justify-center z-10">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      </span>
+                    )}
+                    <div className="flex flex-col items-center mb-2">
+                      <Music className={`w-8 h-8 mb-2 ${options.denoise ? 'text-purple-400' : 'text-gray-400'}`} />
                     </div>
-                    <div className="w-full bg-slate-600 rounded-full h-2">
-                      <div 
-                        className="bg-gradient-to-r from-purple-500 to-pink-500 h-2 rounded-full transition-all duration-300 ease-out"
-                        style={{ width: `${progress}%` }}
-                      ></div>
-                    </div>
+                    <span className="font-semibold text-white text-lg">Denoise Audio</span>
+                    <span className="text-gray-300 text-center text-sm mt-2">
+                      Clean up background noise for clearer speech and improved audio quality.
+                    </span>
                   </div>
-                )}
-                
-                {uploadResult && !isProcessing && (
-                  <div className="mb-4 p-4 bg-slate-600/30 rounded-lg">
-                    <h5 className="text-white font-medium mb-2">Upload Details:</h5>
-                    <div className="text-sm text-gray-300 space-y-1">
-                      <p><span className="text-purple-300">Status:</span> {uploadResult.message}</p>
-                      <p><span className="text-purple-300">File ID:</span> {uploadResult.file_id}</p>
-                      <p><span className="text-purple-300">Type:</span> {fileType} file</p>
-                      <p><span className="text-purple-300">Endpoint:</span> {fileType === 'video' ? '/process-video' : '/process-audio'}</p>
+                  {/* Remove Fillers Option */}
+                  <div
+                    className={`flex flex-col items-center p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
+                      options.removeFillers ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
+                    }`}
+                    onClick={() => handleOptionChange('removeFillers')}
+                  >
+                    {/* Tick at top right */}
+                    {options.removeFillers && (
+                      <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-6 h-6 flex items-center justify-center z-10">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      </span>
+                    )}
+                    <div className="flex flex-col items-center mb-2">
+                      <X className={`w-8 h-8 mb-2 ${options.removeFillers ? 'text-purple-400' : 'text-gray-400'}`} />
                     </div>
+                    <span className="font-semibold text-white text-lg">{t('removeFillers')}</span>
+                    <span className="text-gray-300 text-center text-sm mt-2">
+                      {t('removeFillersDesc')}
+                    </span>
                   </div>
-                )}
+                  {/* Summarize Option */}
+                  <div
+                    className={`flex flex-col items-center p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
+                      options.summarize ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
+                    }`}
+                    onClick={() => handleOptionChange('summarize')}
+                  >
+                    {/* Tick at top right */}
+                    {options.summarize && (
+                      <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-6 h-6 flex items-center justify-center z-10">
+                        <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                      </span>
+                    )}
+                    <div className="flex flex-col items-center mb-2">
+                      <CheckCircle2 className={`w-8 h-8 mb-2 ${options.summarize ? 'text-purple-400' : 'text-gray-400'}`} />
+                    </div>
+                    <span className="font-semibold text-white text-lg">Summarize Content</span>
+                    <span className="text-gray-300 text-center text-sm mt-2">
+                      Generate concise summaries of your audio/video content for quick overviews.
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
 
-                {processResult && (
-                  <div className="p-4 bg-green-600/10 border border-green-600/30 rounded-lg mb-6">
-                    <div className="flex items-center space-x-2 mb-2">
-                      <CheckCircle2 className="w-5 h-5 text-green-400" />
-                      <h5 className="text-green-400 font-medium">Processing Complete!</h5>
+            {file && !processResult && (
+              <div className="text-center">
+                <button
+                  onClick={handleProcess}
+                  disabled={isProcessing}
+                  className={`px-12 py-4 rounded-full font-semibold text-lg transition-all transform ${
+                    !isProcessing
+                      ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 hover:scale-105'
+                      : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  }`}
+                >
+                  {uploading ? (
+                    <div className="flex items-center space-x-3">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>{t('uploading')}</span>
                     </div>
-                    <div className="text-sm text-gray-300">
-                      <p>Your {fileType} has been successfully processed.</p>
-                      {processResult.output_url && (
-                        <p className="mt-2">
-                          <a 
-                            href={processResult.output_url} 
-                            className="text-purple-400 hover:text-purple-300 underline"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            Download processed file
-                          </a>
-                        </p>
-                      )}
+                  ) : processing ? (
+                    <div className="flex items-center space-x-3">
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>{t('processing')} {fileType}...</span>
                     </div>
-                  </div>
-                )}
-
-                {/* Summary Box */}
-                {processResult && processResult.summary && (
-                  <div className="mb-8 max-w-2xl mx-auto">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-white">Summary</h3>
-                      <button
-                        className="text-purple-400 hover:text-purple-200 px-3 py-1 rounded transition-colors border border-purple-400 hover:bg-purple-500/20 text-sm"
-                        onClick={() => {
-                          navigator.clipboard.writeText(processResult.summary);
-                        }}
-                      >
-                        Copy
-                      </button>
+                  ) : (
+                    <div className="flex items-center space-x-3">
+                      <Play className="w-5 h-5" />
+                      <span>{t('process')} {fileType?.charAt(0).toUpperCase() + fileType?.slice(1)}</span>
                     </div>
-                    <div className="bg-slate-800/80 border border-purple-700 rounded-lg p-4 text-gray-200 whitespace-pre-line text-base font-mono overflow-x-auto">
-                      {processResult.summary}
-                    </div>
-                  </div>
-                )}
+                  )}
+                </button>
               </div>
             )}
           </div>
-
-          {/* Error Display */}
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4 mb-8">
-              <div className="flex items-center space-x-3">
-                <AlertCircle className="w-5 h-5 text-red-400" />
-                <div>
-                  <h3 className="text-red-400 font-medium">Processing Error</h3>
-                  <p className="text-red-300 text-sm mt-1">{error}</p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Option Checkboxes */}
-          {file && !processResult && (
-            <div className="mb-8">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Denoise Option */}
-                <div
-                  className={`flex flex-col items-center p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
-                    options.denoise ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
-                  }`}
-                  onClick={() => handleOptionChange('denoise')}
-                >
-                  {/* Tick at top right */}
-                  {options.denoise && (
-                    <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-6 h-6 flex items-center justify-center z-10">
-                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                    </span>
-                  )}
-                  <div className="flex flex-col items-center mb-2">
-                    <CheckCircle2 className={`w-8 h-8 mb-2 ${options.denoise ? 'text-purple-400' : 'text-gray-400'}`} />
-                  </div>
-                  <span className="font-semibold text-white text-lg">Denoise</span>
-                  <span className="text-gray-300 text-center text-sm mt-2">
-                    Remove background noise and enhance audio clarity using advanced AI algorithms.
-                  </span>
-                </div>
-                {/* Remove Fillers Option */}
-                <div
-                  className={`flex flex-col items-center p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
-                    options.removeFillers ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
-                  }`}
-                  onClick={() => handleOptionChange('removeFillers')}
-                >
-                  {/* Tick at top right */}
-                  {options.removeFillers && (
-                    <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-6 h-6 flex items-center justify-center z-10">
-                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                    </span>
-                  )}
-                  <div className="flex flex-col items-center mb-2">
-                    <X className={`w-8 h-8 mb-2 ${options.removeFillers ? 'text-purple-400' : 'text-gray-400'}`} />
-                  </div>
-                  <span className="font-semibold text-white text-lg">Remove Fillers</span>
-                  <span className="text-gray-300 text-center text-sm mt-2">
-                    Automatically detect and remove "um", "uh", and other filler words from speech.
-                  </span>
-                </div>
-                {/* Summarize Option */}
-                <div
-                  className={`flex flex-col items-center p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
-                    options.summarize ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
-                  }`}
-                  onClick={() => handleOptionChange('summarize')}
-                >
-                  {/* Tick at top right */}
-                  {options.summarize && (
-                    <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-6 h-6 flex items-center justify-center z-10">
-                      <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                    </span>
-                  )}
-                  <div className="flex flex-col items-center mb-2">
-                    <AlertCircle className={`w-8 h-8 mb-2 ${options.summarize ? 'text-purple-400' : 'text-gray-400'}`} />
-                  </div>
-                  <span className="font-semibold text-white text-lg">Summarize</span>
-                  <span className="text-gray-300 text-center text-sm mt-2">
-                    Generate an intelligent summary of your content with key points and insights.
-                  </span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Process Button */}
-          {file && !processResult && (
-            <div className="text-center">
-              <button
-                onClick={handleProcess}
-                disabled={isProcessing}
-                className={`px-12 py-4 rounded-full font-semibold text-lg transition-all transform ${
-                  !isProcessing
-                    ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 hover:scale-105'
-                    : 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                }`}
-              >
-                {uploading ? (
-                  <div className="flex items-center space-x-3">
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Uploading...</span>
-                  </div>
-                ) : processing ? (
-                  <div className="flex items-center space-x-3">
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing {fileType}...</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-3">
-                    <Play className="w-5 h-5" />
-                    <span>Process {fileType?.charAt(0).toUpperCase() + fileType?.slice(1)}</span>
-                  </div>
-                )}
-              </button>
-            </div>
-          )}
-        </div>
         )}
       </div>
     </div>

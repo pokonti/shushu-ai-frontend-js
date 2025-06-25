@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthService from '../services/authService';
+import { useTranslation } from 'react-i18next';
 
 export default function AuthPage() {
+  const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -41,35 +43,37 @@ export default function AuthPage() {
   };
 
   const validateForm = () => {
-    const newErrors = {};
-    
+    let newErrors = {};
+    let isValid = true;
+
     if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = t('emailRequired');
+      isValid = false;
+    } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(formData.email)) {
+      newErrors.email = t('invalidEmail');
+      isValid = false;
     }
-    
+
     if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } 
-    // else if (formData.password.length < 6) {
-    //   newErrors.password = 'Password must be at least 6 characters';
-    // }
-    
-    if (!isLogin) {
-      if (!formData.firstName) {
-        newErrors.firstName = 'First name is required';
-      }
-      if (!formData.lastName) {
-        newErrors.lastName = 'Last name is required';
-      }
-      if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Passwords do not match';
-      }
+      newErrors.password = t('passwordRequired');
+      isValid = false;
+    } else if (formData.password.length < 6) {
+      newErrors.password = t('passwordMinLength');
+      isValid = false;
     }
-    
+
+    if (!isLogin && formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = t('passwordsDoNotMatch');
+      isValid = false;
+    }
+
+    if (!isLogin && !formData.firstName) {
+      newErrors.firstName = t('firstNameRequired');
+      isValid = false;
+    }
+
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return isValid;
   };
 
   const handleSubmit = async (e) => {
@@ -88,7 +92,7 @@ export default function AuthPage() {
           password: formData.password
         });
         
-        setSuccessMessage('Login successful! Redirecting...');
+        setSuccessMessage(t('loginSuccess'));
         
         // Redirect after successful login
         setTimeout(() => {
@@ -104,7 +108,7 @@ export default function AuthPage() {
           lastName: formData.lastName
         });
         
-        setSuccessMessage('Registration successful! You can now log in.');
+        setSuccessMessage(t('registrationSuccess'));
         
         // Switch to login mode after successful registration
         setTimeout(() => {
@@ -122,11 +126,15 @@ export default function AuthPage() {
       
     } catch (error) {
       setErrors({
-        general: error.message || 'An error occurred. Please try again.'
+        general: error.message || t('generalError')
       });
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
   };
 
   return (
@@ -136,7 +144,7 @@ export default function AuthPage() {
         <div className="mb-6">
           <Link to="/" className="inline-flex items-center space-x-2 text-purple-400 hover:text-purple-300 transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
+            <span>{t('backToHome')}</span>
           </Link>
         </div>
 
@@ -144,35 +152,30 @@ export default function AuthPage() {
         <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-purple-800/30 p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
+              {isLogin ? t('signIn') : t('signUp')}
             </h1>
             <p className="text-gray-400">
-              {isLogin ? 'Sign in to your account' : 'Get started with ShuShu AI'}
+              {isLogin ? t('welcomeBackDesc') : t('createAccountDesc')}
             </p>
-          </div>
-
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Success Message */}
             {successMessage && (
               <div className="bg-green-500/20 border border-green-500/30 rounded-xl p-4 flex items-center space-x-3">
                 <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
                 <span className="text-green-300">{successMessage}</span>
               </div>
             )}
-
-            {/* General Error */}
             {errors.general && (
               <div className="bg-red-500/20 border border-red-500/30 rounded-xl p-4">
                 <p className="text-red-300">{errors.general}</p>
               </div>
             )}
+          </div>
 
-            {/* Registration Fields */}
+          <form onSubmit={handleSubmit} className="space-y-6">
             {!isLogin && (
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    First Name
+                    {t('firstName')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -184,7 +187,7 @@ export default function AuthPage() {
                       className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                         errors.firstName ? 'border-red-500' : 'border-gray-600'
                       }`}
-                      placeholder="John"
+                      placeholder={t('firstNamePlaceholder')}
                     />
                   </div>
                   {errors.firstName && (
@@ -194,7 +197,7 @@ export default function AuthPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Last Name
+                    {t('lastName')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -206,7 +209,7 @@ export default function AuthPage() {
                       className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                         errors.lastName ? 'border-red-500' : 'border-gray-600'
                       }`}
-                      placeholder="Doe"
+                      placeholder={t('lastNamePlaceholder')}
                     />
                   </div>
                   {errors.lastName && (
@@ -216,10 +219,9 @@ export default function AuthPage() {
               </div>
             )}
 
-            {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email Address
+                {t('emailAddress')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -231,7 +233,7 @@ export default function AuthPage() {
                   className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                     errors.email ? 'border-red-500' : 'border-gray-600'
                   }`}
-                  placeholder="john@example.com"
+                  placeholder={t('emailPlaceholder')}
                 />
               </div>
               {errors.email && (
@@ -239,10 +241,9 @@ export default function AuthPage() {
               )}
             </div>
 
-            {/* Password Field */}
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Password
+                {t('password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -251,15 +252,15 @@ export default function AuthPage() {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                  className={`w-full pl-10 pr-10 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                     errors.password ? 'border-red-500' : 'border-gray-600'
                   }`}
-                  placeholder="••••••••"
+                  placeholder={t('passwordPlaceholder')}
                 />
                 <button
                   type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                  onClick={togglePasswordVisibility}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors focus:outline-none"
                 >
                   {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
@@ -269,11 +270,10 @@ export default function AuthPage() {
               )}
             </div>
 
-            {/* Confirm Password Field */}
             {!isLogin && (
-              <div>
+              <div className="relative">
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Confirm Password
+                  {t('confirmPassword')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -282,11 +282,18 @@ export default function AuthPage() {
                     name="confirmPassword"
                     value={formData.confirmPassword}
                     onChange={handleInputChange}
-                    className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
+                    className={`w-full pl-10 pr-10 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                       errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
                     }`}
-                    placeholder="••••••••"
+                    placeholder={t('confirmPasswordPlaceholder')}
                   />
+                  <button
+                    type="button"
+                    onClick={togglePasswordVisibility}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-white transition-colors focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
                 </div>
                 {errors.confirmPassword && (
                   <p className="text-red-400 text-sm mt-1">{errors.confirmPassword}</p>
@@ -294,57 +301,38 @@ export default function AuthPage() {
               </div>
             )}
 
-            {/* Submit Button */}
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-3 rounded-xl font-semibold hover:from-purple-600 hover:to-pink-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-slate-800 transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 rounded-xl font-semibold text-white text-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 flex items-center justify-center space-x-2"
             >
               {isLoading ? (
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>{isLogin ? 'Signing In...' : 'Creating Account...'}</span>
-                </div>
+                <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
               ) : (
-                <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+                <span>{isLogin ? t('signInBtn') : t('signUpBtn')}</span>
               )}
             </button>
           </form>
 
-          {/* Switch Auth Mode */}
-          <div className="mt-6 text-center">
-            <p className="text-gray-300">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
-              <button
-                onClick={() => {
-                  setIsLogin(!isLogin);
-                  setErrors({});
-                  setSuccessMessage('');
-                  setFormData({
-                    email: '',
-                    password: '',
-                    confirmPassword: '',
-                    firstName: '',
-                    lastName: ''
-                  });
-                }}
-                className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
-              >
-                {isLogin ? 'Sign up' : 'Sign in'}
-              </button>
-            </p>
+          <div className="mt-8 text-center text-gray-400">
+            {isLogin ? t('dontHaveAccount') : t('alreadyHaveAccount')}
+            <button
+              onClick={() => setIsLogin(prev => !prev)}
+              className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
+            >
+              {isLogin ? t('signUp') : t('signIn')}
+            </button>
           </div>
-
-          {/* Forgot Password Link */}
-          {isLogin && (
-            <div className="mt-4 text-center">
-              <button className="text-purple-400 hover:text-purple-300 text-sm transition-colors">
-                Forgot your password? 
-              </button>
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Decorative elements */}
+      <div className="fixed top-20 left-10 w-32 h-32 bg-purple-600/10 rounded-full blur-xl"></div>
+      <div className="fixed bottom-20 right-10 w-40 h-40 bg-pink-600/10 rounded-full blur-xl"></div>
+      <div className="fixed top-1/2 left-1/4 w-24 h-24 bg-indigo-600/10 rounded-full blur-xl"></div>
     </div>
   );
 }

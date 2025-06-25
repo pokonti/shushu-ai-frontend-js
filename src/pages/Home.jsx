@@ -4,9 +4,10 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
 import { features } from '../data/features'
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
-
+  const { t } = useTranslation();
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
       <Header />
@@ -35,7 +36,7 @@ const Home = () => {
             <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6 mb-12">
               <Link to="/editor">
                 <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
-                  <span>Start Creating Now</span>
+                  <span>{t('startCreatingNow')}</span>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
@@ -43,7 +44,7 @@ const Home = () => {
                 <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
                   <Play className="w-5 h-5 ml-1" />
                 </div>
-                <span>Watch Demo</span>
+                <span>{t('watchDemo')}</span>
               </a>
             </div>
           </div>
@@ -61,7 +62,7 @@ const Home = () => {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Powered by <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Advanced AI</span>
+              {t('poweredByAI')}
             </h2>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto">
               Everything you need to transform raw recordings into professional content that captures and keeps attention
@@ -92,27 +93,27 @@ const Home = () => {
             <div className="grid md:grid-cols-2 gap-12 items-center">
               <div>
                 <h3 className="text-3xl md:text-4xl font-bold mb-6">
-                  See the Magic in Action
+                  {t('seeTheMagicInAction')}
                 </h3>
                 <p className="text-gray-300 mb-8">
-                  Watch how our AI transforms a raw 60-minute podcast into a polished episode plus 5 viral clips in under 3 minutes.
+                  {t('watchHowOurAiTransforms')}
                 </p>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>Removes "um", "uh" and long pauses</span>
+                    <span>{t('removesFillerWords')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>Eliminates background noise automatically</span>
+                    <span>{t('eliminatesBackgroundNoise')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>Normalizes audio levels for consistency</span>
+                    <span>{t('normalizesAudioLevels')}</span>
                   </div>
                   <div className="flex items-center space-x-3">
                     <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>Generates trending short clips</span>
+                    <span>{t('generatesTrendingShortClips')}</span>
                   </div>
                 </div>
               </div>
@@ -124,7 +125,7 @@ const Home = () => {
                   className="w-full rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all"
                 />
                 <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                  1 min demo
+                  {t('minDemo')}
                 </div>
               </div>
             </div>
@@ -137,10 +138,10 @@ const Home = () => {
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Simple, <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Transparent</span> Pricing
+              {t('simpleTransparentPricing')}
             </h2>
             <p className="text-xl text-gray-300">
-              Made for local creators with full support for English and Russian speech
+              {t('madeForCreators')}
             </p>
           </div>
 
@@ -148,32 +149,32 @@ const Home = () => {
             {/* Free Plan */}
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold mb-2">Free</h3>
+                <h3 className="text-2xl font-bold mb-2">{t('free')}</h3>
                 <div className="text-4xl font-bold mb-4">0 ₸</div>
-                <p className="text-gray-400">Perfect for getting started</p>
+                <p className="text-gray-400">{t('perfectForGettingStarted')}</p>
               </div>
               
               <ul className="space-y-4 mb-8">
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Up to 30 minutes/month</span>
+                  <span>{t('upTo30Minutes')}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Basic audio cleanup</span>
+                  <span>{t('basicAudioCleanup')}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>1 viral clip per video</span>
+                  <span>{t('viralClipPerVideo')}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>720p export quality</span>
+                  <span>{t('exportQuality720p')}</span>
                 </li>
               </ul>
               
               <button className="w-full border border-white/20 hover:border-purple-500/50 py-3 rounded-full font-semibold transition-colors">
-                Get Started Free
+                {t('getStartedFree')}
               </button>
             </div>
 
@@ -181,42 +182,42 @@ const Home = () => {
             <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
-                  Most Popular
+                  {t('mostPopular')}
                 </div>
               </div>
               
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-bold mb-2">Pro</h3>
+                <h3 className="text-2xl font-bold mb-2">{t('pro')}</h3>
                 <div className="text-4xl font-bold mb-2">4,990 ₸</div>
-                <div className="text-gray-400 mb-4">per month</div>
-                <p className="text-gray-300">For serious content creators</p>
+                <div className="text-gray-400 mb-4">{t('perMonth')}</div>
+                <p className="text-gray-300">{t('forSeriousCreators')}</p>
               </div>
               
               <ul className="space-y-4 mb-8">
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Unlimited processing time</span>
+                  <span>{t('unlimitedProcessing')}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Advanced AI cleanup</span>
+                  <span>{t('advancedAICleanup')}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Up to 5 viral clips per video</span>
+                  <span>{t('upTo5Clips')}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>1080p export quality</span>
+                  <span>{t('exportQuality')}</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <CheckCircle className="w-5 h-5 text-green-400" />
-                  <span>Custom templates & music</span>
+                  <span>{t('customTemplates')}</span>
                 </li>
               </ul>
               
               <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 py-3 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                Start Pro Trial
+                {t('startProTrial')}
               </button>
             </div>
           </div>
@@ -228,22 +229,21 @@ const Home = () => {
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-12">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Ready to Transform Your Content?
+              {t('readyToTransform')}
             </h2>
             <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-              Join thousands of creators who save hours every week with AI-powered editing. 
-              Start your free trial today - no credit card required.
+              {t('joinThousandsOfCreators')}
             </p>
             
             <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
               <Link to="/editor">
                 <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
-                  <span>Start Free Trial</span>
+                  <span>{t('startFreeTrial')}</span>
                   <ArrowRight className="w-5 h-5" />
                 </button>
               </Link>
               <div className="text-gray-400 text-sm">
-                ✓ No credit card required  ✓ Cancel anytime
+                {t('noCreditCardRequired')}
               </div>
             </div>
           </div>

@@ -9,6 +9,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AudioVideoUpload from './pages/AudioVideoUpload';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
+import Shorts from './pages/Shorts';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path='/login' element={<AuthPage/>}/>
                 <Route path="/editor" element={<AudioVideoUpload />} />
+                <Route path='/shorts' element={<Shorts/>}/>
                 <Route path="/profile" element={<Profile/>} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
