@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, CheckCircle2, ArrowLeft } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
 
 export default function AuthPage() {
+  const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -44,13 +46,13 @@ export default function AuthPage() {
     const newErrors = {};
     
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = t('auth.validation.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email is invalid';
+      newErrors.email = t('auth.validation.emailInvalid');
     }
     
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = t('auth.validation.passwordRequired');
     } 
     // else if (formData.password.length < 6) {
     //   newErrors.password = 'Password must be at least 6 characters';
@@ -58,13 +60,13 @@ export default function AuthPage() {
     
     if (!isLogin) {
       if (!formData.firstName) {
-        newErrors.firstName = 'First name is required';
+        newErrors.firstName = t('auth.validation.firstNameRequired');
       }
       if (!formData.lastName) {
-        newErrors.lastName = 'Last name is required';
+        newErrors.lastName = t('auth.validation.lastNameRequired');
       }
       if (formData.password !== formData.confirmPassword) {
-        newErrors.confirmPassword = 'Passwords do not match';
+        newErrors.confirmPassword = t('auth.validation.passwordsDoNotMatch');
       }
     }
     
@@ -88,7 +90,7 @@ export default function AuthPage() {
           password: formData.password
         });
         
-        setSuccessMessage('Login successful! Redirecting...');
+        setSuccessMessage(t('auth.loginSuccessful'));
         
         // Redirect after successful login
         setTimeout(() => {
@@ -104,7 +106,7 @@ export default function AuthPage() {
           lastName: formData.lastName
         });
         
-        setSuccessMessage('Registration successful! You can now log in.');
+        setSuccessMessage(t('auth.registrationSuccessful'));
         
         // Switch to login mode after successful registration
         setTimeout(() => {
@@ -136,7 +138,7 @@ export default function AuthPage() {
         <div className="mb-6">
           <Link to="/" className="inline-flex items-center space-x-2 text-purple-400 hover:text-purple-300 transition-colors">
             <ArrowLeft className="w-4 h-4" />
-            <span>Back to Home</span>
+            <span>{t('auth.backToHome')}</span>
           </Link>
         </div>
 
@@ -144,10 +146,10 @@ export default function AuthPage() {
         <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-purple-800/30 p-8">
           <div className="text-center mb-8">
             <h1 className="text-3xl font-bold text-white mb-2">
-              {isLogin ? 'Welcome Back' : 'Create Account'}
+              {isLogin ? t('auth.welcomeBack') : t('auth.createAccount')}
             </h1>
             <p className="text-gray-400">
-              {isLogin ? 'Sign in to your account' : 'Get started with ShuShu AI'}
+              {isLogin ? t('auth.signInDescription') : t('auth.getStartedDescription')}
             </p>
           </div>
 
@@ -172,7 +174,7 @@ export default function AuthPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    First Name
+                    {t('auth.fields.firstName')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -184,7 +186,7 @@ export default function AuthPage() {
                       className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                         errors.firstName ? 'border-red-500' : 'border-gray-600'
                       }`}
-                      placeholder="John"
+                      placeholder={t('auth.placeholders.firstName')}
                     />
                   </div>
                   {errors.firstName && (
@@ -194,7 +196,7 @@ export default function AuthPage() {
                 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
-                    Last Name
+                    {t('auth.fields.lastName')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -206,7 +208,7 @@ export default function AuthPage() {
                       className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                         errors.lastName ? 'border-red-500' : 'border-gray-600'
                       }`}
-                      placeholder="Doe"
+                      placeholder={t('auth.placeholders.lastName')}
                     />
                   </div>
                   {errors.lastName && (
@@ -219,7 +221,7 @@ export default function AuthPage() {
             {/* Email Field */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Email Address
+                {t('auth.fields.email')}
               </label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -231,7 +233,7 @@ export default function AuthPage() {
                   className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                     errors.email ? 'border-red-500' : 'border-gray-600'
                   }`}
-                  placeholder="john@example.com"
+                  placeholder={t('auth.placeholders.email')}
                 />
               </div>
               {errors.email && (
@@ -242,7 +244,7 @@ export default function AuthPage() {
             {/* Password Field */}
             <div>
               <label className="block text-sm font-medium text-gray-300 mb-2">
-                Password
+                {t('auth.fields.password')}
               </label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -254,7 +256,7 @@ export default function AuthPage() {
                   className={`w-full pl-10 pr-12 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                     errors.password ? 'border-red-500' : 'border-gray-600'
                   }`}
-                  placeholder="••••••••"
+                  placeholder={t('auth.placeholders.password')}
                 />
                 <button
                   type="button"
@@ -273,7 +275,7 @@ export default function AuthPage() {
             {!isLogin && (
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Confirm Password
+                  {t('auth.fields.confirmPassword')}
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
@@ -285,7 +287,7 @@ export default function AuthPage() {
                     className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
                       errors.confirmPassword ? 'border-red-500' : 'border-gray-600'
                     }`}
-                    placeholder="••••••••"
+                    placeholder={t('auth.placeholders.password')}
                   />
                 </div>
                 {errors.confirmPassword && (
@@ -303,10 +305,10 @@ export default function AuthPage() {
               {isLoading ? (
                 <div className="flex items-center justify-center space-x-2">
                   <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  <span>{isLogin ? 'Signing In...' : 'Creating Account...'}</span>
+                  <span>{isLogin ? t('auth.buttons.signingIn') : t('auth.buttons.creatingAccount')}</span>
                 </div>
               ) : (
-                <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+                <span>{isLogin ? t('auth.buttons.signIn') : t('auth.buttons.createAccount')}</span>
               )}
             </button>
           </form>
@@ -314,7 +316,7 @@ export default function AuthPage() {
           {/* Switch Auth Mode */}
           <div className="mt-6 text-center">
             <p className="text-gray-300">
-              {isLogin ? "Don't have an account? " : "Already have an account? "}
+              {isLogin ? t('auth.switchMode.noAccount') : t('auth.switchMode.hasAccount')}
               <button
                 onClick={() => {
                   setIsLogin(!isLogin);
@@ -330,7 +332,7 @@ export default function AuthPage() {
                 }}
                 className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
               >
-                {isLogin ? 'Sign up' : 'Sign in'}
+                {isLogin ? t('auth.switchMode.signUp') : t('auth.switchMode.signIn')}
               </button>
             </p>
           </div>
@@ -339,7 +341,7 @@ export default function AuthPage() {
           {isLogin && (
             <div className="mt-4 text-center">
               <button className="text-purple-400 hover:text-purple-300 text-sm transition-colors">
-                Forgot your password? 
+                {t('auth.forgotPassword')}
               </button>
             </div>
           )}

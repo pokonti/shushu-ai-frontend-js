@@ -1,0 +1,249 @@
+{
+  "common": {
+    "brand": "ShuShu AI",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "copy": "Copy",
+    "download": "Download",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit",
+    "close": "Close",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "filter": "Filter"
+  },
+  "navigation": {
+    "features": "Features",
+    "pricing": "Pricing",
+    "getStarted": "Get Started",
+    "login": "Login",
+    "logout": "Logout",
+    "profile": "Profile",
+    "projects": "Projects",
+    "welcome": "Welcome",
+    "help": "Help",
+    "support": "Support",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "madeIn": "Made in n!"
+  },
+  "home": {
+    "hero": {
+      "badge": "AI-Powered Video & Podcast Editor",
+      "title": "Turn Raw Content Into",
+      "titleHighlight": "Viral Magic",
+      "subtitle": "Automatically clean, edit, and create viral clips from your podcasts and videos.",
+      "startCreating": "Start Creating Now",
+      "watchDemo": "Watch Demo"
+    },
+    "features": {
+      "title": "Powered by",
+      "titleHighlight": "Advanced AI",
+      "subtitle": "Everything you need to transform raw recordings into professional content that captures and keeps attention"
+    },
+    "demo": {
+      "title": "See the Magic in Action",
+      "description": "Watch how our AI transforms a raw 60-minute podcast into a polished episode plus 5 viral clips in under 3 minutes.",
+      "feature1": "Removes \"um\", \"uh\" and long pauses",
+      "feature2": "Eliminates background noise automatically",
+      "feature3": "Normalizes audio levels for consistency",
+      "feature4": "Generates trending short clips",
+      "demoLabel": "1 min demo"
+    },
+    "pricing": {
+      "title": "Simple,",
+      "titleHighlight": "Transparent",
+      "titleSuffix": "Pricing",
+      "subtitle": "Made for local creators with full support for English and Russian speech",
+      "free": {
+        "title": "Free",
+        "price": "0 ₸",
+        "description": "Perfect for getting started",
+        "feature1": "Up to 30 minutes/month",
+        "feature2": "Basic audio cleanup",
+        "feature3": "1 viral clip per video",
+        "feature4": "720p export quality",
+        "button": "Get Started Free"
+      },
+      "pro": {
+        "title": "Pro",
+        "price": "4,990 ₸",
+        "period": "per month",
+        "description": "For serious content creators",
+        "popular": "Most Popular",
+        "feature1": "Unlimited processing time",
+        "feature2": "Advanced AI cleanup",
+        "feature3": "Up to 5 viral clips per video",
+        "feature4": "1080p export quality",
+        "feature5": "Custom templates & music",
+        "button": "Start Pro Trial"
+      }
+    },
+    "cta": {
+      "title": "Ready to Transform Your Content?",
+      "description": "Join thousands of creators who save hours every week with AI-powered editing. Start your free trial today - no credit card required.",
+      "button": "Start Free Trial",
+      "noCard": "✓ No credit card required",
+      "cancelAnytime": "✓ Cancel anytime"
+    }
+  },
+  "features": {
+    "audioEnhancement": {
+      "title": "Pro Audio Enhancement",
+      "description": "Removes filler words, long pauses, background noise, and normalizes audio levels for crystal-clear Russian and English speech"
+    },
+    "videoAssembly": {
+      "title": "Auto Video Assembly",
+      "description": "Seamlessly stitches together video fragments for smooth storytelling flow"
+    },
+    "viralClips": {
+      "title": "Viral Clips Generator",
+      "description": "Creates engaging short-form content for TikTok, Reels, and YouTube Shorts with trending music"
+    },
+    "export": {
+      "title": "One-Click Export",
+      "description": "Export in multiple formats optimized for different social media platforms"
+    }
+  },
+  "upload": {
+    "header": {
+      "title": "AI-Powered Media Processor"
+    },
+    "hero": {
+      "title": "Transform Your Media",
+      "titleHighlight": "With AI Processing",
+      "description": "Upload your audio or video files and let our AI process them with advanced algorithms tailored for each media type."
+    },
+    "loginRequired": {
+      "title": "Please log in to upload your media",
+      "description": "You must be logged in to use the AI-powered media processor.",
+      "loginLink": "Log in"
+    },
+    "uploadArea": {
+      "title": "Drop your media file here, or browse",
+      "description": "Supports video files (MP4, MOV, MKV, AVI, WEBM) and audio files (MP3, WAV, M4A, AAC, FLAC)",
+      "button": "Choose File"
+    },
+    "fileInfo": {
+      "status": "Status",
+      "fileId": "File ID",
+      "type": "Type",
+      "endpoint": "Endpoint"
+    },
+    "processing": {
+      "complete": "Processing Complete!",
+      "description": "Your {{type}} has been successfully processed.",
+      "downloadLink": "Download processed file",
+      "initializing": "Initializing processing...",
+      "processing": "Processing {{type}}...",
+      "finalizing": "Finalizing...",
+      "uploading": "Uploading file...",
+      "processingStatus": "Processing..."
+    },
+    "summary": {
+      "title": "Summary"
+    },
+    "options": {
+      "denoise": {
+        "title": "Denoise",
+        "description": "Remove background noise and enhance audio clarity using advanced AI algorithms."
+      },
+      "removeFillers": {
+        "title": "Remove Fillers",
+        "description": "Automatically detect and remove \"um\", \"uh\", and other filler words from speech."
+      },
+      "summarize": {
+        "title": "Summarize",
+        "description": "Generate an intelligent summary of your content with key points and insights."
+      }
+    },
+    "buttons": {
+      "uploading": "Uploading...",
+      "processing": "Processing {{type}}...",
+      "process": "Process {{type}}"
+    },
+    "errors": {
+      "processingError": "Processing Error"
+    }
+  },
+  "auth": {
+    "backToHome": "Back to Home",
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create Account",
+    "signInDescription": "Sign in to your account",
+    "getStartedDescription": "Get started with ShuShu AI",
+    "loginSuccessful": "Login successful! Redirecting...",
+    "registrationSuccessful": "Registration successful! You can now log in.",
+    "fields": {
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "email": "Email Address",
+      "password": "Password",
+      "confirmPassword": "Confirm Password"
+    },
+    "placeholders": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john@example.com",
+      "password": "••••••••"
+    },
+    "validation": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is invalid",
+      "passwordRequired": "Password is required",
+      "firstNameRequired": "First name is required",
+      "lastNameRequired": "Last name is required",
+      "passwordsDoNotMatch": "Passwords do not match"
+    },
+    "buttons": {
+      "signingIn": "Signing In...",
+      "creatingAccount": "Creating Account...",
+      "signIn": "Sign In",
+      "createAccount": "Create Account"
+    },
+    "switchMode": {
+      "noAccount": "Don't have an account?",
+      "hasAccount": "Already have an account?",
+      "signUp": "Sign up",
+      "signIn": "Sign in"
+    },
+    "forgotPassword": "Forgot your password?"
+  },
+  "profile": {
+    "title": "Profile",
+    "loading": "Loading profile...",
+    "notFound": {
+      "title": "Profile not found",
+      "loginAgain": "Please log in again"
+    },
+    "navigation": {
+      "profileInfo": "Profile Info",
+      "myProjects": "My Projects",
+      "security": "Security"
+    },
+    "profileInfo": {
+      "title": "Profile Information"
+    },
+    "projects": {
+      "title": "My Projects",
+      "search": "Search projects...",
+      "noProjects": "No projects found",
+      "createProject": "Create New Project"
+    }
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "badge": "⚡ Oops! Something went wrong",
+    "mainTitle": "Page Not",
+    "mainTitleHighlight": "Found",
+    "description": "The page you're looking for seems to have vanished into the digital void. Don't worry, even the best explorers sometimes take a wrong turn.",
+    "goHome": "Go Back Home"
+  }
+} 

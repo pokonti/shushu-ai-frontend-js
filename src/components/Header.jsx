@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Wand2, Menu, X, User, LogOut } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Header = () => {
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -99,7 +102,7 @@ const Header = () => {
               <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
                 <Wand2 className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xl font-bold">ShuShu AI</span>
+              <span className="text-xl font-bold">{t('common.brand')}</span>
             </div>
             <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
           </div>
@@ -116,21 +119,21 @@ const Header = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
               <Wand2 className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold">ShuShu AI</span>
+            <span className="text-xl font-bold">{t('common.brand')}</span>
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="hover:text-purple-300 transition-colors">Features</a>
-            <a href="#pricing" className="hover:text-purple-300 transition-colors">Pricing</a>
+            <a href="#features" className="hover:text-purple-300 transition-colors">{t('navigation.features')}</a>
+            <a href="#pricing" className="hover:text-purple-300 transition-colors">{t('navigation.pricing')}</a>
             <Link to="/editor">
               <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                Get Started
+                {t('navigation.getStarted')}
               </button>
             </Link>
             {isLoggedIn ? (
               <div className="flex items-center space-x-8">
                 <Link to="/projects" className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                  Projects
+                  {t('navigation.projects')}
                 </Link>
                 
                 {/* User Menu */}
@@ -156,14 +159,14 @@ const Header = () => {
                         </div>
                       )}
                       <Link to="/profile" className="block px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-purple-500/20 transition-colors">
-                        Profile
+                        {t('navigation.profile')}
                       </Link>
                       <button
                         onClick={handleLogout}
                         className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white hover:bg-purple-500/20 transition-colors flex items-center space-x-2"
                       >
                         <LogOut className="w-4 h-4" />
-                        <span>Logout</span>
+                        <span>{t('navigation.logout')}</span>
                       </button>
                     </div>
                   </div>
@@ -173,11 +176,14 @@ const Header = () => {
               <>
                 <Link to="/login">
                   <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                    Login
+                    {t('navigation.login')}
                   </button>
                 </Link>
               </>
             )}
+            
+            {/* Language Switcher */}
+            <LanguageSwitcher />
           </div>
 
           <button 
@@ -193,19 +199,19 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-black/90 backdrop-blur-md">
           <div className="px-6 py-4 space-y-4">
-            <a href="#features" className="block hover:text-purple-300">Features</a>
-            <a href="#pricing" className="block hover:text-purple-300">Pricing</a>
+            <a href="#features" className="block hover:text-purple-300">{t('navigation.features')}</a>
+            <a href="#pricing" className="block hover:text-purple-300">{t('navigation.pricing')}</a>
             
             {isLoggedIn ? (
               <>
                 <Link to="/projects" className="block">
                   <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold">
-                    Projects
+                    {t('navigation.projects')}
                   </button>
                 </Link>
                 {userInfo && (
                   <div className="text-gray-300 text-sm border-t border-gray-700 pt-4">
-                    <div>Welcome, {userInfo.first_name || userInfo.username}!</div>
+                    <div>{t('navigation.welcome')}, {userInfo.first_name || userInfo.username}!</div>
                   </div>
                 )}
                 <button
@@ -213,16 +219,21 @@ const Header = () => {
                   className="w-full text-left text-gray-300 hover:text-white py-2 flex items-center space-x-2"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
+                  <span>{t('navigation.logout')}</span>
                 </button>
               </>
             ) : (
               <Link to="/editor">
                 <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold">
-                  Get Started
+                  {t('navigation.getStarted')}
                 </button>
               </Link>
             )}
+            
+            {/* Mobile Language Switcher */}
+            <div className="border-t border-gray-700 pt-4">
+              <LanguageSwitcher />
+            </div>
           </div>
         </div>
       )}

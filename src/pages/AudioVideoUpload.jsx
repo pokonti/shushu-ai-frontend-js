@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Video, Music, Loader2, CheckCircle2, X, AlertCircle, Play, ArrowLeft, } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
 
 export default function AudioVideoUpload() {
+  const { t } = useTranslation();
   const [file, setFile] = useState(null);
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -142,11 +144,11 @@ export default function AudioVideoUpload() {
 
       // Update progress messages
       if (newProgress < 30) {
-        setProgressMessage('Initializing processing...');
+        setProgressMessage(t('upload.processing.initializing'));
       } else if (newProgress < 60) {
-        setProgressMessage(`Processing ${fileType}...`);
+        setProgressMessage(t('upload.processing.processing', { type: fileType }));
       } else if (newProgress < 90) {
-        setProgressMessage('Finalizing...');
+        setProgressMessage(t('upload.processing.finalizing'));
       }
 
       if (currentStep >= steps) {
@@ -179,7 +181,7 @@ export default function AudioVideoUpload() {
     setError(null);
     setUploading(true);
     setProgress(0);
-    setProgressMessage('Uploading file...');
+    setProgressMessage(t('upload.processing.uploading'));
     
     try {
       // Upload and process in one call
@@ -190,7 +192,7 @@ export default function AudioVideoUpload() {
       // Start processing
       setProcessing(true);
       setProgress(10);
-      setProgressMessage('Processing...');
+      setProgressMessage(t('upload.processing.processingStatus'));
       
       // Start progress simulation
       const progressInterval = simulateProgress();
@@ -201,7 +203,7 @@ export default function AudioVideoUpload() {
       // Clear progress simulation and set completion
       clearInterval(progressInterval);
       setProgress(100);
-      setProgressMessage('Processing complete!');
+      setProgressMessage(t('upload.processing.complete'));
       setProcessResult(uploadResponse);
       setProcessing(false);
       
@@ -254,28 +256,27 @@ export default function AudioVideoUpload() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center space-x-2 bg-purple-800/30 text-purple-300 px-4 py-2 rounded-full text-sm mb-6">
             <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-            <span>AI-Powered Media Processor</span>
+            <span>{t('upload.header.title')}</span>
           </div>
           
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Transform Your Media
+            {t('upload.hero.title')}
             <br />
             <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              With AI Processing
+              {t('upload.hero.titleHighlight')}
             </span>
           </h1>
           
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
-            Upload your audio or video files and let our AI process them with advanced algorithms
-            tailored for each media type.
+            {t('upload.hero.description')}
           </p>
         </div>
 
         {/* Block upload if not logged in */}
         {!isLoggedIn ? (
           <div className="max-w-2xl mx-auto bg-slate-800/60 border border-purple-800/30 rounded-2xl p-10 text-center shadow-lg">
-            <h2 className="text-2xl font-bold text-white mb-4">Please log in to upload your media</h2>
-            <p className="text-gray-300 mb-6">You must be logged in to use the AI-powered media processor. <br/> <a href="/login" className="text-purple-400 underline hover:text-purple-300">Log in</a> to get started.</p>
+            <h2 className="text-2xl font-bold text-white mb-4">{t('upload.loginRequired.title')}</h2>
+            <p className="text-gray-300 mb-6">{t('upload.loginRequired.description')} <br/> <a href="/login" className="text-purple-400 underline hover:text-purple-300">{t('upload.loginRequired.loginLink')}</a> {t('common.back')}.</p>
           </div>
         ) : (
         <div className="max-w-4xl mx-auto">
@@ -294,16 +295,16 @@ export default function AudioVideoUpload() {
               >
                 <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-white mb-2">
-                  Drop your media file here, or browse
+                  {t('upload.uploadArea.title')}
                 </h3>
                 <p className="text-gray-400 mb-6">
-                  Supports video files (MP4, MOV, MKV, AVI, WEBM) and audio files (MP3, WAV, M4A, AAC, FLAC)
+                  {t('upload.uploadArea.description')}
                 </p>
                 <button
                   onClick={() => fileInputRef.current?.click()}
                   className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105"
                 >
-                  Choose File
+                  {t('upload.uploadArea.button')}
                 </button>
                 <input
                   ref={fileInputRef}
@@ -357,12 +358,12 @@ export default function AudioVideoUpload() {
                 
                 {uploadResult && !isProcessing && (
                   <div className="mb-4 p-4 bg-slate-600/30 rounded-lg">
-                    <h5 className="text-white font-medium mb-2">Upload Details:</h5>
+                    <h5 className="text-white font-medium mb-2">{t('upload.fileInfo.status')}:</h5>
                     <div className="text-sm text-gray-300 space-y-1">
-                      <p><span className="text-purple-300">Status:</span> {uploadResult.message}</p>
-                      <p><span className="text-purple-300">File ID:</span> {uploadResult.file_id}</p>
-                      <p><span className="text-purple-300">Type:</span> {fileType} file</p>
-                      <p><span className="text-purple-300">Endpoint:</span> {fileType === 'video' ? '/process-video' : '/process-audio'}</p>
+                      <p><span className="text-purple-300">{t('upload.fileInfo.status')}:</span> {uploadResult.message}</p>
+                      <p><span className="text-purple-300">{t('upload.fileInfo.fileId')}:</span> {uploadResult.file_id}</p>
+                      <p><span className="text-purple-300">{t('upload.fileInfo.type')}:</span> {fileType} {t('upload.fileInfo.type')}</p>
+                      <p><span className="text-purple-300">{t('upload.fileInfo.endpoint')}:</span> {fileType === 'video' ? '/process-video' : '/process-audio'}</p>
                     </div>
                   </div>
                 )}
@@ -371,10 +372,10 @@ export default function AudioVideoUpload() {
                   <div className="p-4 bg-green-600/10 border border-green-600/30 rounded-lg mb-6">
                     <div className="flex items-center space-x-2 mb-2">
                       <CheckCircle2 className="w-5 h-5 text-green-400" />
-                      <h5 className="text-green-400 font-medium">Processing Complete!</h5>
+                      <h5 className="text-green-400 font-medium">{t('upload.processing.complete')}</h5>
                     </div>
                     <div className="text-sm text-gray-300">
-                      <p>Your {fileType} has been successfully processed.</p>
+                      <p>{t('upload.processing.description', { type: fileType })}</p>
                       {processResult.output_url && (
                         <p className="mt-2">
                           <a 
@@ -383,7 +384,7 @@ export default function AudioVideoUpload() {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Download processed file
+                            {t('upload.processing.downloadLink')}
                           </a>
                         </p>
                       )}
@@ -395,14 +396,14 @@ export default function AudioVideoUpload() {
                 {processResult && processResult.summary && (
                   <div className="mb-8 max-w-2xl mx-auto">
                     <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-lg font-bold text-white">Summary</h3>
+                      <h3 className="text-lg font-bold text-white">{t('upload.summary.title')}</h3>
                       <button
                         className="text-purple-400 hover:text-purple-200 px-3 py-1 rounded transition-colors border border-purple-400 hover:bg-purple-500/20 text-sm"
                         onClick={() => {
                           navigator.clipboard.writeText(processResult.summary);
                         }}
                       >
-                        Copy
+                        {t('common.copy')}
                       </button>
                     </div>
                     <div className="bg-slate-800/80 border border-purple-700 rounded-lg p-4 text-gray-200 whitespace-pre-line text-base font-mono overflow-x-auto">
@@ -420,7 +421,7 @@ export default function AudioVideoUpload() {
               <div className="flex items-center space-x-3">
                 <AlertCircle className="w-5 h-5 text-red-400" />
                 <div>
-                  <h3 className="text-red-400 font-medium">Processing Error</h3>
+                  <h3 className="text-red-400 font-medium">{t('upload.errors.processingError')}</h3>
                   <p className="text-red-300 text-sm mt-1">{error}</p>
                 </div>
               </div>
@@ -447,9 +448,9 @@ export default function AudioVideoUpload() {
                   <div className="flex flex-col items-center mb-2">
                     <CheckCircle2 className={`w-8 h-8 mb-2 ${options.denoise ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
-                  <span className="font-semibold text-white text-lg">Denoise</span>
+                  <span className="font-semibold text-white text-lg">{t('upload.options.denoise.title')}</span>
                   <span className="text-gray-300 text-center text-sm mt-2">
-                    Remove background noise and enhance audio clarity using advanced AI algorithms.
+                    {t('upload.options.denoise.description')}
                   </span>
                 </div>
                 {/* Remove Fillers Option */}
@@ -468,9 +469,9 @@ export default function AudioVideoUpload() {
                   <div className="flex flex-col items-center mb-2">
                     <X className={`w-8 h-8 mb-2 ${options.removeFillers ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
-                  <span className="font-semibold text-white text-lg">Remove Fillers</span>
+                  <span className="font-semibold text-white text-lg">{t('upload.options.removeFillers.title')}</span>
                   <span className="text-gray-300 text-center text-sm mt-2">
-                    Automatically detect and remove "um", "uh", and other filler words from speech.
+                    {t('upload.options.removeFillers.description')}
                   </span>
                 </div>
                 {/* Summarize Option */}
@@ -489,9 +490,9 @@ export default function AudioVideoUpload() {
                   <div className="flex flex-col items-center mb-2">
                     <AlertCircle className={`w-8 h-8 mb-2 ${options.summarize ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
-                  <span className="font-semibold text-white text-lg">Summarize</span>
+                  <span className="font-semibold text-white text-lg">{t('upload.options.summarize.title')}</span>
                   <span className="text-gray-300 text-center text-sm mt-2">
-                    Generate an intelligent summary of your content with key points and insights.
+                    {t('upload.options.summarize.description')}
                   </span>
                 </div>
               </div>
@@ -513,17 +514,17 @@ export default function AudioVideoUpload() {
                 {uploading ? (
                   <div className="flex items-center space-x-3">
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Uploading...</span>
+                    <span>{t('upload.buttons.uploading')}</span>
                   </div>
                 ) : processing ? (
                   <div className="flex items-center space-x-3">
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing {fileType}...</span>
+                    <span>{t('upload.buttons.processing', { type: fileType })}</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-3">
                     <Play className="w-5 h-5" />
-                    <span>Process {fileType?.charAt(0).toUpperCase() + fileType?.slice(1)}</span>
+                    <span>{t('upload.buttons.process', { type: fileType?.charAt(0).toUpperCase() + fileType?.slice(1) })}</span>
                   </div>
                 )}
               </button>
