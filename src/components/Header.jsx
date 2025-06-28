@@ -130,6 +130,11 @@ const Header = () => {
                 {t('navigation.getStarted')}
               </button>
             </Link>
+            <Link to="/shorts">
+              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
+                Shorts
+              </button>
+            </Link>
             {isLoggedIn ? (
               <div className="flex items-center space-x-8">
                 <Link to="/projects" className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
@@ -201,7 +206,16 @@ const Header = () => {
           <div className="px-6 py-4 space-y-4">
             <a href="#features" className="block hover:text-purple-300">{t('navigation.features')}</a>
             <a href="#pricing" className="block hover:text-purple-300">{t('navigation.pricing')}</a>
-            
+            <Link to="/editor">
+              <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold mb-2">
+                {t('navigation.getStarted')}
+              </button>
+            </Link>
+            <Link to="/shorts">
+              <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold mb-2">
+                Shorts
+              </button>
+            </Link>
             {isLoggedIn ? (
               <>
                 <Link to="/projects" className="block">
