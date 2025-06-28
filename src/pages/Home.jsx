@@ -1,5 +1,5 @@
-import React from 'react';
-import { Play, Zap, CheckCircle, ArrowRight} from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Play, Zap, CheckCircle, ArrowRight, Music, AudioWaveform, Music2, Music3, Music4} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
@@ -9,10 +9,73 @@ import { useFeatures } from '../data/features'
 const Home = () => {
   const { t } = useTranslation();
   const features = useFeatures();
+  const [audioLevel, setAudioLevel] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAudioLevel(Math.random() * 100);
+    }, 300);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Floating musical notes animation data
+  const floatingNotes = Array.from({ length: 20 }, (_, i) => ({
+    id: i,
+    size: Math.random() * 20 + 10,
+    x: Math.random() * 100,
+    y: Math.random() * 100,
+    delay: Math.random() * 5,
+    duration: Math.random() * 10 + 5,
+    icon: [Music, Music2, Music3, Music4, AudioWaveform][Math.floor(Math.random() * 5)]
+  }));
+
+  // Audio waveform bars
+  const waveformBars = Array.from({ length: 40 }, (_, i) => ({
+    id: i,
+    height: Math.random() * 60 + 20,
+    delay: i * 0.1
+  }));
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
+      {/* Floating Musical Notes Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        {floatingNotes.map((note) => {
+          const IconComponent = note.icon;
+          return (
+            <div
+              key={note.id}
+              className="absolute opacity-20 animate-bounce"
+              style={{
+                left: `${note.x}%`,
+                top: `${note.y}%`,
+                animationDelay: `${note.delay}s`,
+                animationDuration: `${note.duration}s`,
+                fontSize: `${note.size}px`
+              }}
+            >
+              <IconComponent className="text-purple-400" style={{ width: note.size, height: note.size }} />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Animated Audio Waveform Background */}
+      <div className="fixed bottom-0 left-0 right-0 h-32 flex items-end justify-center space-x-1 opacity-10 pointer-events-none">
+        {waveformBars.map((bar) => (
+          <div
+            key={bar.id}
+            className="bg-gradient-to-t from-purple-500 to-pink-500 w-2 animate-pulse"
+            style={{
+              height: `${bar.height}%`,
+              animationDelay: `${bar.delay}s`
+            }}
+          />
+        ))}
+      </div>
+
       <Header />
+       
 
       {/* Hero Section */}
       <section className="relative pt-24 pb-16 px-6">
@@ -59,6 +122,134 @@ const Home = () => {
         </div>
       </section>
 
+     {/* Interactive Demo Section - Before/After */}
+      <section id="demo" className="py-12 px-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 backdrop-blur-lg border border-white/10 rounded-3xl p-8 md:p-16 shadow-2xl">
+            
+            {/* Section Header */}
+            <div className="text-center mb-16">
+              <h3 className="text-3xl md:text-4xl font-bold mb-6">
+                {t('home.demo.title')}
+              </h3>
+              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+                See the incredible transformation from raw audio to professional-quality sound
+              </p>
+            </div>
+
+            {/* Before/After Video Comparison */}
+            <div className="grid md:grid-cols-2 gap-8 mb-16">
+              
+              {/* Before Video */}
+              <div className="relative group">
+                <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-3xl p-6 border border-red-500/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-xl font-semibold text-red-400">Before</h4>
+                    <div className="px-3 py-1 bg-red-500/20 rounded-full text-sm text-red-300">
+                      Raw Audio
+                    </div>
+                  </div>
+                  
+                  <div className="relative bg-gray-900 rounded-2xl overflow-hidden">
+                    <video 
+                      className="w-full h-48 object-cover"
+                      controls
+                      poster="/path-to-before-thumbnail.jpg"
+                    >
+                      <source src="/path-to-before-video.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    
+                    {/* Play Overlay */}
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Play className="w-12 h-12 text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Audio Quality Indicators */}
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-400">Background Noise</span>
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-400">Clarity</span>
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* After Video */}
+              <div className="relative group">
+                <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl p-6 border border-green-500/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-xl font-semibold text-green-400">After</h4>
+                    <div className="px-3 py-1 bg-green-500/20 rounded-full text-sm text-green-300">
+                      Enhanced Audio
+                    </div>
+                  </div>
+                  
+                  <div className="relative bg-gray-900 rounded-2xl overflow-hidden">
+                    <video 
+                      className="w-full h-48 object-cover"
+                      controls
+                      poster="/path-to-after-thumbnail.jpg"
+                    >
+                      <source src="/path-to-after-video.mp4" type="video/mp4" />
+                      Your browser does not support the video tag.
+                    </video>
+                    
+                    {/* Play Overlay */}
+                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Play className="w-12 h-12 text-white" />
+                    </div>
+                  </div>
+                  
+                  {/* Audio Quality Indicators */}
+                  <div className="mt-4 space-y-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-400">Background Noise</span>
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                        <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-gray-400">Clarity</span>
+                      <div className="flex space-x-1">
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+      
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section id="features" className="py-20 px-6 relative">
         <div className="max-w-7xl mx-auto">
@@ -84,53 +275,6 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
               </div>
             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Demo Section */}
-      <section id="demo" className="py-20 px-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12">
-            <div className="grid md:grid-cols-2 gap-12 items-center">
-              <div>
-                <h3 className="text-3xl md:text-4xl font-bold mb-6">
-                  {t('home.demo.title')}
-                </h3>
-                <p className="text-gray-300 mb-8">
-                  {t('home.demo.description')}
-                </p>
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>{t('home.demo.feature1')}</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>{t('home.demo.feature2')}</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>{t('home.demo.feature3')}</span>
-                  </div>
-                  <div className="flex items-center space-x-3">
-                    <CheckCircle className="w-5 h-5 text-green-400" />
-                    <span>{t('home.demo.feature4')}</span>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="relative">
-                <video
-                  src="public/videos/demo.mp4"
-                  controls
-                  className="w-full rounded-2xl border border-white/10 hover:border-purple-500/50 transition-all"
-                />
-                <div className="absolute -bottom-4 -right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-2 rounded-full text-sm font-semibold">
-                  {t('home.demo.demoLabel')}
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

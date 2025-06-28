@@ -12,8 +12,8 @@ export default function AuthPage() {
     email: '',
     password: '',
     confirmPassword: '',
-    firstName: '',
-    lastName: ''
+    // firstName: '',
+    // lastName: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -59,12 +59,12 @@ export default function AuthPage() {
     // }
     
     if (!isLogin) {
-      if (!formData.firstName) {
-        newErrors.firstName = t('auth.validation.firstNameRequired');
-      }
-      if (!formData.lastName) {
-        newErrors.lastName = t('auth.validation.lastNameRequired');
-      }
+      // if (!formData.firstName) {
+      //   newErrors.firstName = t('auth.validation.firstNameRequired');
+      // }
+      // if (!formData.lastName) {
+      //   newErrors.lastName = t('auth.validation.lastNameRequired');
+      // }
       if (formData.password !== formData.confirmPassword) {
         newErrors.confirmPassword = t('auth.validation.passwordsDoNotMatch');
       }
@@ -102,8 +102,8 @@ export default function AuthPage() {
         await AuthService.register({
           email: formData.email,
           password: formData.password,
-          firstName: formData.firstName,
-          lastName: formData.lastName
+          // firstName: formData.firstName,
+          // lastName: formData.lastName
         });
         
         setSuccessMessage(t('auth.registrationSuccessful'));
@@ -115,8 +115,8 @@ export default function AuthPage() {
             email: formData.email, // Keep email for convenience
             password: '',
             confirmPassword: '',
-            firstName: '',
-            lastName: ''
+            // firstName: '',
+            // lastName: ''
           });
           setSuccessMessage('');
         }, 2000);
@@ -172,7 +172,7 @@ export default function AuthPage() {
             {/* Registration Fields */}
             {!isLogin && (
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                {/* <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
                     {t('auth.fields.firstName')}
                   </label>
@@ -214,7 +214,7 @@ export default function AuthPage() {
                   {errors.lastName && (
                     <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>
                   )}
-                </div>
+                </div> */}
               </div>
             )}
 
@@ -326,8 +326,8 @@ export default function AuthPage() {
                     email: '',
                     password: '',
                     confirmPassword: '',
-                    firstName: '',
-                    lastName: ''
+                    // firstName: '',
+                    // lastName: ''
                   });
                 }}
                 className="text-purple-400 hover:text-purple-300 font-medium transition-colors"

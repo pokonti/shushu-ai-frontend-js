@@ -1,7 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Upload, Video, Music, Loader2, CheckCircle2, X, AlertCircle, Play, ArrowLeft, } from 'lucide-react';
+import { Upload, Video, Music, Loader2, CheckCircle2, X, AlertCircle, Play, ArrowLeft, Zap} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
+import { uploadAndProcessFile } from '../services/uploadService';
+
 
 export default function AudioVideoUpload() {
   const { t } = useTranslation();
@@ -100,38 +102,6 @@ export default function AudioVideoUpload() {
     setProgressMessage('');
   };
 
-  const uploadFile = async (fileToUpload, fileType, options) => {
-    const endpoint = fileType === 'video' ? '/upload-video' : '/upload-audio';
-    // Build query string from options
-    const params = new URLSearchParams();
-    if (options?.denoise) params.append('denoise', 'true');
-    if (options?.removeFillers) params.append('remove_fillers', 'true');
-    if (options?.summarize) params.append('summarize', 'true');
-
-    const url = `${API_BASE_URL}${endpoint}?${params.toString()}`;
-
-    const formData = new FormData();
-    formData.append('file', fileToUpload);
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.detail || 'Upload failed');
-      }
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Upload error:', error);
-      throw error;
-    }
-  };
-
   const simulateProgress = (duration = 30000) => {
     const interval = 100; // Update every 100ms
     const steps = duration / interval;
@@ -179,42 +149,94 @@ export default function AudioVideoUpload() {
     if (!file || !fileType) return;
     
     setError(null);
-    setUploading(true);
+    setProcessing(true); // We use a single 'processing' state now
     setProgress(0);
-    setProgressMessage(t('upload.processing.uploading'));
-    
+    setProgressMessage(t('upload.processing.initiating'));
+  
     try {
-      // Upload and process in one call
-      const uploadResponse = await uploadFile(file, fileType, options);
-      setUploadResult(uploadResponse);
-      setUploading(false);
+      // This is the progress handler callback for our new service
+      const onUploadProgress = (percent) => {
+        // The upload is the first 40% of the total progress bar
+        const uploadProgress = (percent / 100) * 40;
+        setProgress(uploadProgress);
+        setProgressMessage(t('upload.processing.uploading', { progress: Math.round(percent) }));
+      };
+  
+      // Call the new, all-in-one service function
+      const result = await uploadAndProcessFile({
+        file,
+        options,
+        onUploadProgress,
+      });
       
-      // Start processing
-      setProcessing(true);
-      setProgress(10);
-      setProgressMessage(t('upload.processing.processingStatus'));
+      // Once the upload is done, we move to the processing stage
+      setProgress(50); // Set progress to 50% to show processing has started
+      setProgressMessage(t('upload.processing.processing', { type: fileType }));
       
-      // Start progress simulation
-      const progressInterval = simulateProgress();
-      
-      // Simulate processing time
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Clear progress simulation and set completion
-      clearInterval(progressInterval);
+      // Simulate a bit of extra time for backend processing if needed,
+      // or you can remove this if your backend is fast.
+      await new Promise(resolve => setTimeout(resolve, 1500));
+  
+      // All done!
       setProgress(100);
       setProgressMessage(t('upload.processing.complete'));
-      setProcessResult(uploadResponse);
-      setProcessing(false);
-      
+      setProcessResult(result); // The result from our backend's /process-file endpoint
+  
     } catch (error) {
-      setError(error.message);
-      setUploading(false);
-      setProcessing(false);
+      console.error("An error occurred:", error);
+      setError(error.message || 'An unknown error occurred.');
       setProgress(0);
       setProgressMessage('');
+    } finally {
+      setProcessing(false); // Make sure to turn off the processing state
+      setUploading(false); // also turn off old state if you still use it
     }
   };
+  
+  // const handleProcess = async () => {
+  //   if (!file || !fileType) return;
+    
+  //   setError(null);
+  //   setUploading(true);
+  //   setProgress(0);
+  //   setProgressMessage(t('upload.processing.uploading'));
+    
+  //   try {
+  //     // Use shared upload service
+  //     const uploadResponse = await sharedUploadFile({
+  //       file,
+  //       fileType,
+  //       options
+  //     });
+  //     setUploadResult(uploadResponse);
+  //     setUploading(false);
+      
+  //     // Start processing
+  //     setProcessing(true);
+  //     setProgress(10);
+  //     setProgressMessage(t('upload.processing.processingStatus'));
+      
+  //     // Start progress simulation
+  //     const progressInterval = simulateProgress();
+      
+  //     // Simulate processing time
+  //     await new Promise(resolve => setTimeout(resolve, 2000));
+      
+  //     // Clear progress simulation and set completion
+  //     clearInterval(progressInterval);
+  //     setProgress(100);
+  //     setProgressMessage(t('upload.processing.complete'));
+  //     setProcessResult(uploadResponse);
+  //     setProcessing(false);
+      
+  //   } catch (error) {
+  //     setError(error.message);
+  //     setUploading(false);
+  //     setProcessing(false);
+  //     setProgress(0);
+  //     setProgressMessage('');
+  //   }
+  // };
 
   const getFileIcon = (file) => {
     if (fileType === 'video') {
@@ -254,9 +276,9 @@ export default function AudioVideoUpload() {
       <div className="container mx-auto px-6 py-12">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center space-x-2 bg-purple-800/30 text-purple-300 px-4 py-2 rounded-full text-sm mb-6">
-            <span className="w-2 h-2 bg-purple-400 rounded-full animate-pulse"></span>
-            <span>{t('upload.header.title')}</span>
+          <div className="inline-flex items-center space-x-2 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-full px-4 py-2 mb-8">
+              <Zap className="w-4 h-4 text-yellow-400" />
+              <span className="text-sm text-white">{t('home.hero.badge')}</span> 
           </div>
           
           <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
@@ -266,11 +288,11 @@ export default function AudioVideoUpload() {
               {t('upload.hero.titleHighlight')}
             </span>
           </h1>
-          
           <p className="text-xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
             {t('upload.hero.description')}
           </p>
         </div>
+
 
         {/* Block upload if not logged in */}
         {!isLoggedIn ? (
