@@ -145,42 +145,88 @@ export default function AudioVideoUpload() {
     }));
   };
 
+  // const handleProcess = async () => {
+  //   if (!file || !fileType) return;
+    
+  //   setError(null);
+  //   setProcessing(true); // We use a single 'processing' state now
+  //   setProgress(0);
+  //   setProgressMessage(t('upload.processing.initiating'));
+  
+  //   try {
+  //     // This is the progress handler callback for our new service
+  //     const onUploadProgress = (percent) => {
+  //       // The upload is the first 40% of the total progress bar
+  //       const uploadProgress = (percent / 100) * 40;
+  //       setProgress(uploadProgress);
+  //       setProgressMessage(t('upload.processing.uploading', { progress: Math.round(percent) }));
+  //     };
+  
+  //     // Call the new, all-in-one service function
+  //     const result = await uploadAndProcessFile({
+  //       file,
+  //       options,
+  //       onUploadProgress,
+  //     });
+      
+  //     // Once the upload is done, we move to the processing stage
+  //     setProgress(50); // Set progress to 50% to show processing has started
+  //     setProgressMessage(t('upload.processing.processing', { type: fileType }));
+      
+  //     // Simulate a bit of extra time for backend processing if needed,
+  //     // or you can remove this if your backend is fast.
+  //     await new Promise(resolve => setTimeout(resolve, 1500));
+  
+  //     // All done!
+  //     setProgress(100);
+  //     setProgressMessage(t('upload.processing.complete'));
+  //     setProcessResult(result); // The result from our backend's /process-file endpoint
+  
+  //   } catch (error) {
+  //     console.error("An error occurred:", error);
+  //     setError(error.message || 'An unknown error occurred.');
+  //     setProgress(0);
+  //     setProgressMessage('');
+  //   } finally {
+  //     setProcessing(false); // Make sure to turn off the processing state
+  //     setUploading(false); // also turn off old state if you still use it
+  //   }
+  // };
+  
   const handleProcess = async () => {
     if (!file || !fileType) return;
     
     setError(null);
-    setProcessing(true); // We use a single 'processing' state now
+    setProcessing(true);
+    setUploading(true); // Keep your existing state logic
     setProgress(0);
     setProgressMessage(t('upload.processing.initiating'));
   
     try {
-      // This is the progress handler callback for our new service
       const onUploadProgress = (percent) => {
-        // The upload is the first 40% of the total progress bar
         const uploadProgress = (percent / 100) * 40;
         setProgress(uploadProgress);
         setProgressMessage(t('upload.processing.uploading', { progress: Math.round(percent) }));
       };
   
-      // Call the new, all-in-one service function
+      // Call the all-in-one service function, now passing the fileType
       const result = await uploadAndProcessFile({
         file,
+        fileType, // <-- THIS IS THE ONLY LINE YOU NEED TO ADD
         options,
         onUploadProgress,
       });
       
-      // Once the upload is done, we move to the processing stage
-      setProgress(50); // Set progress to 50% to show processing has started
+      // The rest of your existing logic can remain the same
+      setProgress(50); 
       setProgressMessage(t('upload.processing.processing', { type: fileType }));
       
-      // Simulate a bit of extra time for backend processing if needed,
-      // or you can remove this if your backend is fast.
       await new Promise(resolve => setTimeout(resolve, 1500));
   
-      // All done!
       setProgress(100);
       setProgressMessage(t('upload.processing.complete'));
-      setProcessResult(result); // The result from our backend's /process-file endpoint
+      // In your code you used 'setProcessResult', let's stick with that
+      setProcessResult(result);
   
     } catch (error) {
       console.error("An error occurred:", error);
@@ -188,55 +234,10 @@ export default function AudioVideoUpload() {
       setProgress(0);
       setProgressMessage('');
     } finally {
-      setProcessing(false); // Make sure to turn off the processing state
-      setUploading(false); // also turn off old state if you still use it
+      setProcessing(false);
+      setUploading(false);
     }
   };
-  
-  // const handleProcess = async () => {
-  //   if (!file || !fileType) return;
-    
-  //   setError(null);
-  //   setUploading(true);
-  //   setProgress(0);
-  //   setProgressMessage(t('upload.processing.uploading'));
-    
-  //   try {
-  //     // Use shared upload service
-  //     const uploadResponse = await sharedUploadFile({
-  //       file,
-  //       fileType,
-  //       options
-  //     });
-  //     setUploadResult(uploadResponse);
-  //     setUploading(false);
-      
-  //     // Start processing
-  //     setProcessing(true);
-  //     setProgress(10);
-  //     setProgressMessage(t('upload.processing.processingStatus'));
-      
-  //     // Start progress simulation
-  //     const progressInterval = simulateProgress();
-      
-  //     // Simulate processing time
-  //     await new Promise(resolve => setTimeout(resolve, 2000));
-      
-  //     // Clear progress simulation and set completion
-  //     clearInterval(progressInterval);
-  //     setProgress(100);
-  //     setProgressMessage(t('upload.processing.complete'));
-  //     setProcessResult(uploadResponse);
-  //     setProcessing(false);
-      
-  //   } catch (error) {
-  //     setError(error.message);
-  //     setUploading(false);
-  //     setProcessing(false);
-  //     setProgress(0);
-  //     setProgressMessage('');
-  //   }
-  // };
 
   const getFileIcon = (file) => {
     if (fileType === 'video') {
@@ -398,10 +399,12 @@ export default function AudioVideoUpload() {
                     </div>
                     <div className="text-sm text-gray-300">
                       <p>{t('upload.processing.description', { type: fileType })}</p>
-                      {processResult.output_url && (
+                      
+                     
+                      {processResult.public_url && (
                         <p className="mt-2">
                           <a 
-                            href={processResult.output_url} 
+                            href={processResult.public_url} // Use the new flat property
                             className="text-purple-400 hover:text-purple-300 underline"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -410,6 +413,7 @@ export default function AudioVideoUpload() {
                           </a>
                         </p>
                       )}
+
                     </div>
                   </div>
                 )}
