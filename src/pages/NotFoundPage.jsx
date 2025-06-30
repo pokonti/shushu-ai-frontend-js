@@ -7,26 +7,6 @@ export default function NotFoundPage() {
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 text-white">
-      {/* Navigation */}
-      <nav className="flex items-center justify-between px-6 py-4">
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-500 rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">404</span>
-          </div>
-          <span className="text-xl font-bold">{t('notFound.title')}</span>
-        </div>
-        <div className="hidden md:flex items-center space-x-6">
-          <button className="text-gray-300 hover:text-white transition-colors">
-            {t('navigation.help')}
-          </button>
-          <button className="text-gray-300 hover:text-white transition-colors">
-            {t('navigation.support')}
-          </button>
-          <button className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2 rounded-full font-medium hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105">
-            {t('notFound.goHome')}
-          </button>
-        </div>
-      </nav>
 
       {/* Main Content */}
       <div className="flex flex-col items-center justify-center px-6 py-20 text-center">

@@ -133,7 +133,7 @@ const Home = () => {
                 {t('home.demo.title')}
               </h3>
               <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-                See the incredible transformation from raw audio to professional-quality sound
+                {t('home.demo.beforeAfterDescription')}
               </p>
             </div>
 
@@ -144,9 +144,9 @@ const Home = () => {
               <div className="relative group">
                 <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-3xl p-6 border border-red-500/30">
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xl font-semibold text-red-400">Before</h4>
+                    <h4 className="text-xl font-semibold text-red-400">{t('home.demo.before')}</h4>
                     <div className="px-3 py-1 bg-red-500/20 rounded-full text-sm text-red-300">
-                      Raw Audio
+                      {t('home.demo.rawAudio')}
                     </div>
                   </div>
                   
@@ -169,7 +169,7 @@ const Home = () => {
                   {/* Audio Quality Indicators */}
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">Background Noise</span>
+                      <span className="text-gray-400">{t('home.demo.backgroundNoise')}</span>
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                         <div className="w-2 h-2 bg-red-500 rounded-full"></div>
@@ -179,7 +179,7 @@ const Home = () => {
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">Clarity</span>
+                      <span className="text-gray-400">{t('home.demo.clarity')}</span>
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-red-500 rounded-full"></div>
                         <div className="w-2 h-2 bg-red-500 rounded-full"></div>
@@ -196,9 +196,9 @@ const Home = () => {
               <div className="relative group">
                 <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl p-6 border border-green-500/30">
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xl font-semibold text-green-400">After</h4>
+                    <h4 className="text-xl font-semibold text-green-400">{t('home.demo.after')}</h4>
                     <div className="px-3 py-1 bg-green-500/20 rounded-full text-sm text-green-300">
-                      Enhanced Audio
+                      {t('home.demo.enhancedAudio')}
                     </div>
                   </div>
                   
@@ -221,7 +221,7 @@ const Home = () => {
                   {/* Audio Quality Indicators */}
                   <div className="mt-4 space-y-2">
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">Background Noise</span>
+                      <span className="text-gray-400">{t('home.demo.backgroundNoise')}</span>
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                         <div className="w-2 h-2 bg-gray-600 rounded-full"></div>
@@ -231,7 +231,7 @@ const Home = () => {
                       </div>
                     </div>
                     <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-400">Clarity</span>
+                      <span className="text-gray-400">{t('home.demo.clarity')}</span>
                       <div className="flex space-x-1">
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                         <div className="w-2 h-2 bg-green-500 rounded-full"></div>
@@ -262,15 +262,15 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
             {features.map((feature, index) => (
               <div key={index} className="group relative">
-                <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10">
+                <div className="h-full flex flex-col bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10">
                   <div className="text-purple-400 mb-4 group-hover:scale-110 transition-transform">
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                  <p className="text-gray-400">{feature.description}</p>
+                  <p className="text-gray-400 flex-grow">{feature.description}</p>
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
               </div>
@@ -334,7 +334,7 @@ const Home = () => {
               
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">{t('home.pricing.pro.title')}</h3>
-                <div className="text-4xl font-bold mb-2">{t('home.pricing.pro.price')}</div>
+                {/* <div className="text-4xl font-bold mb-2">{t('home.pricing.pro.price')}</div> */}
                 <div className="text-gray-400 mb-4">{t('home.pricing.pro.period')}</div>
                 <p className="text-gray-300">{t('home.pricing.pro.description')}</p>
               </div>

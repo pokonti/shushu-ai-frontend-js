@@ -51,6 +51,13 @@
     "demo": {
       "title": "See the Magic in Action",
       "description": "Watch how our AI transforms a raw 60-minute podcast into a polished episode plus 5 viral clips in under 3 minutes.",
+      "beforeAfterDescription": "See the incredible transformation from raw audio to professional-quality sound",
+      "before": "Before",
+      "after": "After",
+      "rawAudio": "Raw Audio",
+      "enhancedAudio": "Enhanced Audio",
+      "backgroundNoise": "Background Noise",
+      "clarity": "Clarity",
       "feature1": "Removes \"um\", \"uh\" and long pauses",
       "feature2": "Eliminates background noise automatically",
       "feature3": "Normalizes audio levels for consistency",
@@ -66,10 +73,10 @@
         "title": "Free",
         "price": "0 ₸",
         "description": "Perfect for getting started",
-        "feature1": "Up to 30 minutes/month",
+        "feature1": "Up to 15 minutes/month",
         "feature2": "Basic audio cleanup",
         "feature3": "1 viral clip per video",
-        "feature4": "720p export quality",
+        "feature4": "File size up to 150MB",
         "button": "Get Started Free"
       },
       "pro": {
@@ -128,7 +135,7 @@
     },
     "uploadArea": {
       "title": "Drop your media file here, or browse",
-      "description": "Supports video files (MP4, MOV, MKV, AVI, WEBM) and audio files (MP3, WAV, M4A, AAC, FLAC)",
+      "description": "Supports video files (MP4, MOV, MKV) and audio files (MP3, WAV). Maximum file size: 150MB",
       "button": "Choose File"
     },
     "fileInfo": {
@@ -170,7 +177,11 @@
       "process": "Process {{type}}"
     },
     "errors": {
-      "processingError": "Processing Error"
+      "processingError": "Processing Error",
+      "fileTooLarge": "File Too Large",
+      "fileSizeExceeded": "File size ({{fileSize}}) exceeds the maximum limit of {{maxSize}}. Please choose a smaller file.",
+      "invalidFileType": "Invalid File Type",
+      "unsupportedFormat": "This file format is not supported. Please use video files (MP4, MOV, MKV) or audio files (MP3, WAV)."
     }
   },
   "auth": {
