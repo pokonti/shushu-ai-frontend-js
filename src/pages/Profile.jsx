@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { User, Mail, Calendar, Edit, Save, X, Camera, ArrowLeft,Settings,Key,
   Shield,Folder,Plus, Grid, List, Search, Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import AuthService from '../services/authService';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -13,30 +14,146 @@ export default function Profile() {
   const [activeTab, setActiveTab] = useState('profile');
   const [projectsView, setProjectsView] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
+  const [error, setError] = useState(null);
+  
+  // Image upload states
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageUploading, setImageUploading] = useState(false);
+  const [imageError, setImageError] = useState(null);
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
+
+  // Image handling functions
+  const validateImage = (file) => {
+    const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    if (!validTypes.includes(file.type)) {
+      return { isValid: false, error: 'Please select a valid image file (JPG, PNG, GIF, or WEBP)' };
+    }
+
+    if (file.size > maxSize) {
+      return { isValid: false, error: 'Image size must be less than 5MB' };
+    }
+
+    return { isValid: true };
+  };
+
+  const handleDrag = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") {
+      setDragActive(true);
+    } else if (e.type === "dragleave") {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      
+      const validation = validateImage(file);
+      if (!validation.isValid) {
+        setImageError(validation.error);
+        return;
+      }
+
+      setImageError(null);
+      setSelectedImage(file);
+
+      // Create preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = e.target.result;
+        setImagePreview(preview);
+        
+        // Save to localStorage for persistence
+        localStorage.setItem('profileImage', preview);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleImageSelect = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const validation = validateImage(file);
+    if (!validation.isValid) {
+      setImageError(validation.error);
+      return;
+    }
+
+    setImageError(null);
+    setSelectedImage(file);
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const preview = e.target.result;
+      setImagePreview(preview);
+      
+      // Save to localStorage for persistence
+      localStorage.setItem('profileImage', preview);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleImageUpload = () => {
+    fileInputRef.current?.click();
+  };
+
+  const removeImage = () => {
+    setSelectedImage(null);
+    setImagePreview(null);
+    setImageError(null);
+    localStorage.removeItem('profileImage');
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  // Load saved image on component mount
+  useEffect(() => {
+    const savedImage = localStorage.getItem('profileImage');
+    if (savedImage) {
+      setImagePreview(savedImage);
+    }
+  }, []);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // Simulate fetching user data - replace with your actual AuthService call
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Check if user is authenticated
+        if (!AuthService.isAuthenticated()) {
+          setError('Not authenticated');
+          setIsLoading(false);
+          return;
+        }
+
+        // Fetch actual user data
+        const userData = await AuthService.getCurrentUser();
         
-        const mockUserData = {
-          id: 1,
-          username: 'john_doe',
-          email: 'john.doe@example.com',
-          first_name: 'John',
-          last_name: 'Doe',
-          created_at: '2024-01-15T10:30:00Z'
-        };
-        
-        setUserInfo(mockUserData);
+        setUserInfo(userData);
         setEditData({
-          first_name: mockUserData.first_name || '',
-          last_name: mockUserData.last_name || '',
-          email: mockUserData.email || mockUserData.username || '',
+          first_name: userData.first_name || '',
+          last_name: userData.last_name || '',
+          email: userData.email || userData.username || '',
         });
       } catch (error) {
         console.error('Failed to fetch user data:', error);
+        setError(error.message);
+        
+        // If authentication failed, redirect to login
+        if (error.message.includes('Session expired') || error.message.includes('No authentication token')) {
+          window.location.href = '/login';
+        }
       } finally {
         setIsLoading(false);
       }
@@ -97,13 +214,16 @@ export default function Profile() {
   if (!userInfo) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center">
-        <div className="text-center text-white">
+        <div className="text-center text-white max-w-md">
           <h2 className="text-2xl font-bold mb-4">{t('profile.notFound.title')}</h2>
+          <p className="text-gray-300 mb-6">
+            {error || t('profile.notFound.loginAgain')}
+          </p>
           <button 
             onClick={() => window.location.href = '/login'} 
-            className="text-purple-400 hover:text-purple-300"
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all"
           >
-            {t('profile.notFound.loginAgain')}
+            {t('navigation.login')}
           </button>
         </div>
       </div>
@@ -138,17 +258,69 @@ export default function Profile() {
               {/* Profile Avatar */}
               <div className="text-center mb-6">
                 <div className="relative inline-block">
-                  <div className="w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4">
-                    <User className="w-12 h-12 text-white" />
+                  <div 
+                    className={`w-24 h-24 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4 overflow-hidden transition-all cursor-pointer ${
+                      dragActive ? 'ring-2 ring-purple-400 ring-offset-2 ring-offset-slate-800 scale-105' : 'hover:scale-105'
+                    }`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                    onClick={handleImageUpload}
+                  >
+                    {imagePreview ? (
+                      <img 
+                        src={imagePreview} 
+                        alt="Profile" 
+                        className="w-full h-full object-cover rounded-full"
+                      />
+                    ) : (
+                      <User className="w-12 h-12 text-white" />
+                    )}
+                    {dragActive && (
+                      <div className="absolute inset-0 bg-purple-500/50 rounded-full flex items-center justify-center">
+                        <Camera className="w-8 h-8 text-white" />
+                      </div>
+                    )}
                   </div>
-                  <button className="absolute bottom-0 right-0 bg-purple-500 rounded-full p-2 hover:bg-purple-600 transition-colors">
+                  <button 
+                    onClick={handleImageUpload}
+                    className="absolute bottom-0 right-0 bg-purple-500 rounded-full p-2 hover:bg-purple-600 transition-colors"
+                  >
                     <Camera className="w-4 h-4 text-white" />
                   </button>
+                  {imagePreview && (
+                    <button
+                      onClick={removeImage}
+                      className="absolute -top-2 -right-2 bg-red-500 rounded-full p-1 hover:bg-red-600 transition-colors"
+                    >
+                      <X className="w-3 h-3 text-white" />
+                    </button>
+                  )}
                 </div>
                 <h3 className="text-xl font-bold text-white">
-                  {userInfo.first_name} {userInfo.last_name}
+                  {userInfo.first_name || userInfo.last_name 
+                    ? `${userInfo.first_name || ''} ${userInfo.last_name || ''}`.trim()
+                    : userInfo.username || 'User'
+                  }
                 </h3>
                 <p className="text-gray-400">{userInfo.email || userInfo.username}</p>
+                
+                {/* Image Error Display */}
+                {imageError && (
+                  <div className="mt-2 text-red-400 text-sm">
+                    {imageError}
+                  </div>
+                )}
+                
+                {/* Hidden File Input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+                  onChange={handleImageSelect}
+                  className="hidden"
+                />
               </div>
 
               {/* Navigation */}
@@ -241,7 +413,7 @@ export default function Profile() {
                       />
                     ) : (
                       <div className="px-4 py-3 bg-slate-700/30 border border-gray-600 rounded-xl text-white">
-                        {userInfo.first_name}
+                        {userInfo.first_name || 'Not provided'}
                       </div>
                     )}
                   </div>
@@ -260,7 +432,7 @@ export default function Profile() {
                       />
                     ) : (
                       <div className="px-4 py-3 bg-slate-700/30 border border-gray-600 rounded-xl text-white">
-                        {userInfo.last_name}
+                        {userInfo.last_name || 'Not provided'}
                       </div>
                     )}
                   </div>

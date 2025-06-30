@@ -26,6 +26,7 @@ export default function AudioVideoUpload() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const API_BASE_URL = 'http://localhost:8000';
+  const MAX_FILE_SIZE = 150 * 1024 * 1024; // 150MB in bytes
 
   useEffect(() => {
     setIsLoggedIn(AuthService.isAuthenticated());
@@ -56,10 +57,14 @@ export default function AudioVideoUpload() {
     
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0];
-      if (isValidFile(droppedFile)) {
+      const validation = validateFile(droppedFile);
+      
+      if (validation.isValid) {
         setFile(droppedFile);
         setFileType(getFileType(droppedFile));
         resetStates();
+      } else {
+        setError(validation.error);
       }
     }
   };
@@ -67,22 +72,54 @@ export default function AudioVideoUpload() {
   const handleFileSelect = (e) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
-      if (isValidFile(selectedFile)) {
+      const validation = validateFile(selectedFile);
+      
+      if (validation.isValid) {
         setFile(selectedFile);
         setFileType(getFileType(selectedFile));
         resetStates();
+      } else {
+        setError(validation.error);
       }
     }
   };
 
-  const isValidFile = (file) => {
-    const validExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm', '.mp3', '.wav', '.m4a', '.aac', '.flac'];
+  const validateFile = (file) => {
+    // Check file type first
+    if (!isValidFileType(file)) {
+      return {
+        isValid: false,
+        error: t('upload.errors.unsupportedFormat')
+      };
+    }
+    
+    // Check file size
+    if (file.size > MAX_FILE_SIZE) {
+      return {
+        isValid: false,
+        error: t('upload.errors.fileSizeExceeded', {
+          fileSize: formatFileSize(file.size),
+          maxSize: formatFileSize(MAX_FILE_SIZE)
+        })
+      };
+    }
+    
+    return { isValid: true };
+  };
+
+  const isValidFileType = (file) => {
+    const validExtensions = ['.mp4', '.mov', '.mkv', '.mp3', '.wav'];
     return validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
   };
 
+  // Legacy function for backward compatibility - now just calls isValidFileType
+  const isValidFile = (file) => {
+    return isValidFileType(file);
+  };
+
   const getFileType = (file) => {
-    const videoExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm'];
-    const audioExtensions = ['.mp3', '.wav', '.m4a', '.aac', '.flac'];
+    const videoExtensions = ['.mp4', '.mov', '.mkv'];
+    const audioExtensions = ['.mp3', '.wav'];
     
     const fileName = file.name.toLowerCase();
     
@@ -149,38 +186,36 @@ export default function AudioVideoUpload() {
     if (!file || !fileType) return;
     
     setError(null);
-    setProcessing(true); // We use a single 'processing' state now
+    setProcessing(true);
+    setUploading(true); // Keep your existing state logic
     setProgress(0);
     setProgressMessage(t('upload.processing.initiating'));
   
     try {
-      // This is the progress handler callback for our new service
       const onUploadProgress = (percent) => {
-        // The upload is the first 40% of the total progress bar
         const uploadProgress = (percent / 100) * 40;
         setProgress(uploadProgress);
         setProgressMessage(t('upload.processing.uploading', { progress: Math.round(percent) }));
       };
   
-      // Call the new, all-in-one service function
+      // Call the all-in-one service function, now passing the fileType
       const result = await uploadAndProcessFile({
         file,
+        fileType, 
         options,
         onUploadProgress,
       });
       
-      // Once the upload is done, we move to the processing stage
-      setProgress(50); // Set progress to 50% to show processing has started
+      // The rest of your existing logic can remain the same
+      setProgress(50); 
       setProgressMessage(t('upload.processing.processing', { type: fileType }));
       
-      // Simulate a bit of extra time for backend processing if needed,
-      // or you can remove this if your backend is fast.
       await new Promise(resolve => setTimeout(resolve, 1500));
   
-      // All done!
       setProgress(100);
       setProgressMessage(t('upload.processing.complete'));
-      setProcessResult(result); // The result from our backend's /process-file endpoint
+      // In your code you used 'setProcessResult', let's stick with that
+      setProcessResult(result);
   
     } catch (error) {
       console.error("An error occurred:", error);
@@ -188,55 +223,10 @@ export default function AudioVideoUpload() {
       setProgress(0);
       setProgressMessage('');
     } finally {
-      setProcessing(false); // Make sure to turn off the processing state
-      setUploading(false); // also turn off old state if you still use it
+      setProcessing(false);
+      setUploading(false);
     }
   };
-  
-  // const handleProcess = async () => {
-  //   if (!file || !fileType) return;
-    
-  //   setError(null);
-  //   setUploading(true);
-  //   setProgress(0);
-  //   setProgressMessage(t('upload.processing.uploading'));
-    
-  //   try {
-  //     // Use shared upload service
-  //     const uploadResponse = await sharedUploadFile({
-  //       file,
-  //       fileType,
-  //       options
-  //     });
-  //     setUploadResult(uploadResponse);
-  //     setUploading(false);
-      
-  //     // Start processing
-  //     setProcessing(true);
-  //     setProgress(10);
-  //     setProgressMessage(t('upload.processing.processingStatus'));
-      
-  //     // Start progress simulation
-  //     const progressInterval = simulateProgress();
-      
-  //     // Simulate processing time
-  //     await new Promise(resolve => setTimeout(resolve, 2000));
-      
-  //     // Clear progress simulation and set completion
-  //     clearInterval(progressInterval);
-  //     setProgress(100);
-  //     setProgressMessage(t('upload.processing.complete'));
-  //     setProcessResult(uploadResponse);
-  //     setProcessing(false);
-      
-  //   } catch (error) {
-  //     setError(error.message);
-  //     setUploading(false);
-  //     setProcessing(false);
-  //     setProgress(0);
-  //     setProgressMessage('');
-  //   }
-  // };
 
   const getFileIcon = (file) => {
     if (fileType === 'video') {
@@ -251,6 +241,12 @@ export default function AudioVideoUpload() {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const shouldShowDownloadLink = () => {
+    // Show download link if any processing option (denoise or removeFillers) is selected
+    // Hide download link if only summarize is selected
+    return options.denoise || options.removeFillers;
   };
 
   const isProcessing = uploading || processing;
@@ -331,9 +327,9 @@ export default function AudioVideoUpload() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  className="hidden"
-                  accept=".mp4,.mov,.mkv,.avi,.webm,.mp3,.wav,.m4a,.aac,.flac"
+                  accept=".mp4,.mov,.mkv,.mp3,.wav"
                   onChange={handleFileSelect}
+                  className="hidden"
                 />
               </div>
             ) : (
@@ -398,10 +394,12 @@ export default function AudioVideoUpload() {
                     </div>
                     <div className="text-sm text-gray-300">
                       <p>{t('upload.processing.description', { type: fileType })}</p>
-                      {processResult.output_url && (
+                      
+                     
+                      {processResult.public_url && shouldShowDownloadLink() && (
                         <p className="mt-2">
                           <a 
-                            href={processResult.output_url} 
+                            href={processResult.public_url} // Use the new flat property
                             className="text-purple-400 hover:text-purple-300 underline"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -410,6 +408,7 @@ export default function AudioVideoUpload() {
                           </a>
                         </p>
                       )}
+
                     </div>
                   </div>
                 )}
