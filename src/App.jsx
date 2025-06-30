@@ -9,6 +9,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AudioVideoUpload from './pages/AudioVideoUpload';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
+import GTMPageTracker from './components/GTMPageTracker';
 // import Shorts from './pages/Shorts';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/profile" element={<Profile/>} />
                 {/* <Route path="/shorts" element={<Shorts />} /> */}
                 <Route path="*" element={<NotFoundPage />} />
+                <Route path="/gtm" element={<GTMPageTracker />} />
             </Routes>
         </Router>
     </>

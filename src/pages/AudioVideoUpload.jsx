@@ -2,8 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Video, Music, Loader2, CheckCircle2, X, AlertCircle, Play, ArrowLeft, Zap} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
-import { uploadAndProcessFile } from '../services/uploadService';
-
+import { uploadAndProcessFile, POLLING_INTERVALS } from '../services/uploadService';
+import { pushToDataLayer } from '../services/gtmService';
 
 export default function AudioVideoUpload() {
   const { t } = useTranslation();
@@ -197,6 +197,11 @@ export default function AudioVideoUpload() {
         setProgress(uploadProgress);
         setProgressMessage(t('upload.processing.uploading', { progress: Math.round(percent) }));
       };
+      pushToDataLayer({
+        event: 'process_start', // A custom event name you will use in GTM
+        file_type: fileType,
+        selected_options: options // Send the selected options for more detailed tracking
+      });
   
       // Call the all-in-one service function, now passing the fileType
       const result = await uploadAndProcessFile({
@@ -204,6 +209,7 @@ export default function AudioVideoUpload() {
         fileType, 
         options,
         onUploadProgress,
+        pollingIntervalMs: POLLING_INTERVALS.VERY_SLOW
       });
       
       // The rest of your existing logic can remain the same
