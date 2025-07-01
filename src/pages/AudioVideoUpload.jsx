@@ -197,12 +197,6 @@ export default function AudioVideoUpload() {
         setProgress(uploadProgress);
         setProgressMessage(t('upload.processing.uploading', { progress: Math.round(percent) }));
       };
-      pushToDataLayer({
-        event: 'process_start', // A custom event name you will use in GTM
-        file_type: fileType,
-        selected_options: options // Send the selected options for more detailed tracking
-      });
-  
       // Call the all-in-one service function, now passing the fileType
       const result = await uploadAndProcessFile({
         file,

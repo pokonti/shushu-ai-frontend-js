@@ -25,7 +25,6 @@ function App() {
                 <Route path="/profile" element={<Profile/>} />
                 {/* <Route path="/shorts" element={<Shorts />} /> */}
                 <Route path="*" element={<NotFoundPage />} />
-                <Route path="/gtm" element={<GTMPageTracker />} />
             </Routes>
         </Router>
     </>
