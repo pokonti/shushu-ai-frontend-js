@@ -1,4 +1,4 @@
-const API_BASE_URL = 'http://134.209.242.230:8000/auth';
+const API_BASE_URL = 'https://api.shushu.cam/auth';
 
 class AuthService {
   constructor() {
