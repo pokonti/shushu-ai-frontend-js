@@ -3,7 +3,6 @@ import { Upload, Video, Music, Loader2, CheckCircle2, X, AlertCircle, Play, Arro
 import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
 import { uploadAndProcessFile, POLLING_INTERVALS } from '../services/uploadService';
-import { pushToDataLayer } from '../services/gtmService';
 
 export default function AudioVideoUpload() {
   const { t } = useTranslation();

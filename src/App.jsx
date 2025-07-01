@@ -9,7 +9,6 @@ import NotFoundPage from './pages/NotFoundPage';
 import AudioVideoUpload from './pages/AudioVideoUpload';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
-import GTMPageTracker from './components/GTMPageTracker';
 // import Shorts from './pages/Shorts';
 
 function App() {
