@@ -9,6 +9,7 @@ import NotFoundPage from './pages/NotFoundPage';
 import AudioVideoUpload from './pages/AudioVideoUpload';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
+import AnalyticsTracker from './components/AnalyticsTracker';
 // import Shorts from './pages/Shorts';
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
   return (
     <>
        <Router>
-
+       <AnalyticsTracker />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path='/login' element={<AuthPage/>}/>

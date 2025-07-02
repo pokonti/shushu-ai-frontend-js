@@ -200,52 +200,46 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
+            {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-black/90 backdrop-blur-md">
-          <div className="px-6 py-4 space-y-4">
-            <a href="#features" className="block hover:text-purple-300">{t('navigation.features')}</a>
-            <a href="#pricing" className="block hover:text-purple-300">{t('navigation.pricing')}</a>
-            <Link to="/editor">
-              <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold mb-2">
-                {t('navigation.getStarted')}
-              </button>
+        <div className="md:hidden absolute left-0 right-0 top-full bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-slate-900/95 backdrop-blur-xl border-b border-purple-500/20 z-50 shadow-xl">
+          <div className="px-6 py-6 space-y-3">
+            <a href="#features" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.features')}</a>
+            <a href="#pricing" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.pricing')}</a>
+            <Link to="/editor" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
+              {t('navigation.getStarted')}
             </Link>
-            <Link to="/shorts">
-              <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold mb-2">
-                Shorts
-              </button>
+            <Link to="/shorts" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
+              Shorts
             </Link>
             {isLoggedIn ? (
               <>
-                <Link to="/projects" className="block">
-                  <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold">
-                    {t('navigation.projects')}
-                  </button>
+                <Link to="/projects" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
+                  {t('navigation.projects')}
                 </Link>
                 {userInfo && (
-                  <div className="text-gray-300 text-sm border-t border-gray-700 pt-4">
-                    <div>{t('navigation.welcome')}, {userInfo.first_name || userInfo.username}!</div>
+                  <div className="py-3 px-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
+                    <div className="text-gray-300 text-sm font-medium">
+                      {userInfo.email || userInfo.username}
+                    </div>
                   </div>
                 )}
                 <button
                   onClick={handleLogout}
-                  className="w-full text-left text-gray-300 hover:text-white py-2 flex items-center space-x-2"
+                  className="w-full py-3 px-4 rounded-xl hover:bg-red-500/20 hover:text-red-300 transition-all duration-200 font-medium flex items-center space-x-2"
                 >
                   <LogOut className="w-4 h-4" />
                   <span>{t('navigation.logout')}</span>
                 </button>
               </>
             ) : (
-              <Link to="/editor">
-                <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold">
-                  {t('navigation.getStarted')}
-                </button>
+              <Link to="/login" className="block py-3 px-4 rounded-xl hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-200 font-medium">
+                {t('navigation.login')}
               </Link>
             )}
             
             {/* Mobile Language Switcher */}
-            <div className="border-t border-gray-700 pt-4">
+            <div className="border-t border-purple-500/20 pt-4">
               <LanguageSwitcher />
             </div>
           </div>

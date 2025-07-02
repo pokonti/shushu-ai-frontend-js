@@ -86,7 +86,7 @@ const Home = () => {
               <span className="text-sm">{t('home.hero.badge')}</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
               {t('home.hero.title')}
               <br />
               <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -94,7 +94,7 @@ const Home = () => {
               </span>
             </h1>
             
-            <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
               {t('home.hero.subtitle')}
             </p>
             
@@ -125,34 +125,34 @@ const Home = () => {
      {/* Interactive Demo Section - Before/After */}
       <section id="demo" className="py-12 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 backdrop-blur-lg border border-white/10 rounded-3xl p-8 md:p-16 shadow-2xl">
+          <div className="bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 backdrop-blur-lg border border-white/10 rounded-3xl p-6 sm:p-8 md:p-16 shadow-2xl">
             
             {/* Section Header */}
-            <div className="text-center mb-16">
-              <h3 className="text-3xl md:text-4xl font-bold mb-6">
+            <div className="text-center mb-12 md:mb-16">
+              <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6">
                 {t('home.demo.title')}
               </h3>
-              <p className="text-lg text-gray-400 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg text-gray-400 max-w-2xl mx-auto">
                 {t('home.demo.beforeAfterDescription')}
               </p>
             </div>
 
             {/* Before/After Video Comparison */}
-            <div className="grid md:grid-cols-2 gap-8 mb-16">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-12 md:mb-16">
               
               {/* Before Video */}
               <div className="relative group">
-                <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-3xl p-6 border border-red-500/30">
+                <div className="bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-3xl p-4 sm:p-6 border border-red-500/30">
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-xl font-semibold text-red-400">{t('home.demo.before')}</h4>
-                    <div className="px-3 py-1 bg-red-500/20 rounded-full text-sm text-red-300">
+                    <h4 className="text-lg sm:text-xl font-semibold text-red-400">{t('home.demo.before')}</h4>
+                    <div className="px-2 sm:px-3 py-1 bg-red-500/20 rounded-full text-xs sm:text-sm text-red-300">
                       {t('home.demo.rawAudio')}
                     </div>
                   </div>
                   
                   <div className="relative bg-gray-900 rounded-2xl overflow-hidden">
                     <video 
-                      className="w-full h-48 object-cover"
+                      className="w-full h-40 sm:h-48 md:h-56 object-cover"
                       controls
                       poster="/path-to-before-thumbnail.jpg"
                     >
@@ -194,7 +194,7 @@ const Home = () => {
 
               {/* After Video */}
               <div className="relative group">
-                <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl p-6 border border-green-500/30">
+                <div className="bg-gradient-to-br from-green-500/20 to-emerald-500/20 rounded-3xl p-4 sm:p-6 border border-green-500/30">
                   <div className="flex items-center justify-between mb-4">
                     <h4 className="text-xl font-semibold text-green-400">{t('home.demo.after')}</h4>
                     <div className="px-3 py-1 bg-green-500/20 rounded-full text-sm text-green-300">
@@ -204,7 +204,7 @@ const Home = () => {
                   
                   <div className="relative bg-gray-900 rounded-2xl overflow-hidden">
                     <video 
-                      className="w-full h-48 object-cover"
+                      className="w-full h-40 sm:h-48 md:h-56 object-cover"
                       controls
                       poster="/path-to-after-thumbnail.jpg"
                     >
@@ -253,16 +253,16 @@ const Home = () => {
       {/* Features Section */}
       <section id="features" className="py-20 px-6 relative">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6">
               {t('home.features.title')} <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('home.features.titleHighlight')}</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
               {t('home.features.subtitle')}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 items-stretch">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-stretch">
             {features.map((feature, index) => (
               <div key={index} className="group relative">
                 <div className="h-full flex flex-col bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10">
@@ -282,18 +282,18 @@ const Home = () => {
       {/* Pricing Section */}
       <section id="pricing" className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6">
               {t('home.pricing.title')} <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('home.pricing.titleHighlight')}</span> {t('home.pricing.titleSuffix')}
             </h2>
-            <p className="text-xl text-gray-300">
+            <p className="text-lg sm:text-xl text-gray-300">
               {t('home.pricing.subtitle')}
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
             {/* Free Plan */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-8">
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 md:p-8">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">{t('home.pricing.free.title')}</h3>
                 <div className="text-4xl font-bold mb-4">{t('home.pricing.free.price')}</div>
@@ -325,7 +325,7 @@ const Home = () => {
             </div>
 
             {/* Pro Plan */}
-            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-8 relative">
+            <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 backdrop-blur-sm border border-purple-500/30 rounded-2xl p-6 md:p-8 relative">
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1 rounded-full text-sm font-semibold">
                   {t('home.pricing.pro.popular')}
@@ -373,11 +373,11 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 md:p-12">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
               {t('home.cta.title')}
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               {t('home.cta.description')}
             </p>
             
