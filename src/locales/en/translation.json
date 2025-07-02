@@ -193,6 +193,8 @@
     "loginSuccessful": "Login successful! Redirecting...",
     "registrationSuccessful": "Registration successful! You can now log in.",
     "orContinueWith": "or continue with",
+    "authenticationRequired": "Authentication Required",
+    "backToHome": "to Home",
     "fields": {
       "firstName": "First Name",
       "lastName": "Last Name",

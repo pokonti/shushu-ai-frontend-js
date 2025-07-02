@@ -193,6 +193,8 @@
     "loginSuccessful": "Вход выполнен успешно! Перенаправление...",
     "registrationSuccessful": "Регистрация успешна! Теперь вы можете войти.",
     "orContinueWith": "или войти через",
+    "authenticationRequired": "Требуется аутентификация",
+    "backToHome": "на главную",
     "fields": {
       "firstName": "Имя",
       "lastName": "Фамилия",
