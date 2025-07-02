@@ -192,6 +192,7 @@
     "getStartedDescription": "Get started with ShuShu AI",
     "loginSuccessful": "Login successful! Redirecting...",
     "registrationSuccessful": "Registration successful! You can now log in.",
+    "orContinueWith": "or continue with",
     "fields": {
       "firstName": "First Name",
       "lastName": "Last Name",
@@ -217,7 +218,9 @@
       "signingIn": "Signing In...",
       "creatingAccount": "Creating Account...",
       "signIn": "Sign In",
-      "createAccount": "Create Account"
+      "createAccount": "Create Account",
+      "signInWithGoogle": "Sign in with Google",
+      "signUpWithGoogle": "Sign up with Google"
     },
     "switchMode": {
       "noAccount": "Don't have an account?",

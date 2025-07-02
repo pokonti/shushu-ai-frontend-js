@@ -1,10 +1,38 @@
-const API_BASE_URL = 'https://api.shushu.cam/auth';
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL}/auth`;
 
 class AuthService {
   constructor() {
     this.token = localStorage.getItem('access_token');
   }
+  async loginWithGoogle(authorizationCode) {
+    try {
+      const response = await fetch(`${API_BASE_URL}/google`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        // The backend expects a JSON body with a 'code' key
+        body: JSON.stringify({ code: authorizationCode }),
+      });
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.detail || 'Google login failed');
+      }
+
+      const data = await response.json();
+      
+      // Save the token and update the class instance, just like a normal login
+      localStorage.setItem('access_token', data.access_token);
+      localStorage.setItem('token_type', data.token_type);
+      this.token = data.access_token;
+
+      return data;
+    } catch (error) {
+      console.error('Google login error:', error);
+      throw error;
+    }
+  }
   async register(userData) {
     try {
       const response = await fetch(`${API_BASE_URL}/register`, {

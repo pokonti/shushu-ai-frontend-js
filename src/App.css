@@ -1,1 +1,13 @@
 @import "tailwindcss";
+
+/* Ensure purple background on document edges */
+html, body {
+    background-color: #581c87;
+    margin: 0;
+    padding: 0;
+}
+
+/* Prevent horizontal overflow */
+body {
+    overflow-x: hidden;
+}

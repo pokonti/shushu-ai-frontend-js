@@ -3,6 +3,8 @@ import { Eye, EyeOff, Mail, Lock, User, CheckCircle2, ArrowLeft } from 'lucide-r
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
+import { useGoogleLogin } from '@react-oauth/google';
+import { GoogleIcon } from '../components/GoogleIcon';
 
 export default function AuthPage() {
   const { t } = useTranslation();
@@ -11,9 +13,7 @@ export default function AuthPage() {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    confirmPassword: '',
-    // firstName: '',
-    // lastName: ''
+    confirmPassword: ''
   });
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState({});
@@ -84,7 +84,6 @@ export default function AuthPage() {
     
     try {
       if (isLogin) {
-        // Login
         const result = await AuthService.login({
           email: formData.email,
           password: formData.password
@@ -131,6 +130,37 @@ export default function AuthPage() {
     }
   };
 
+  const handleGoogleLogin = useGoogleLogin({
+    // Use the secure 'auth-code' flow
+    flow: 'auth-code',
+
+    // This function is called after the user successfully logs in with Google
+    onSuccess: async (codeResponse) => {
+      setIsLoading(true); // Show loading spinner
+      try {
+        // Send the authorization code we received from Google to our backend
+        await AuthService.loginWithGoogle(codeResponse.code);
+        
+        // On success, redirect to the main app page or editor
+        navigate('/'); 
+
+      } catch (error) {
+        console.error("Backend Google login failed:", error);
+        setErrors({
+          general: error.message || 'Google login failed. Please try again.'
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    onError: (errorResponse) => {
+      console.error("Google login error:", errorResponse);
+      setErrors({
+        general: 'An error occurred during Google Sign-In.'
+      });
+    }
+  });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
@@ -169,54 +199,27 @@ export default function AuthPage() {
               </div>
             )}
 
-            {/* Registration Fields */}
-            {!isLogin && (
-              <div className="grid grid-cols-2 gap-4">
-                {/* <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    {t('auth.fields.firstName')}
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="firstName"
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
-                        errors.firstName ? 'border-red-500' : 'border-gray-600'
-                      }`}
-                      placeholder={t('auth.placeholders.firstName')}
-                    />
-                  </div>
-                  {errors.firstName && (
-                    <p className="text-red-400 text-sm mt-1">{errors.firstName}</p>
-                  )}
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2">
-                    {t('auth.fields.lastName')}
-                  </label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-                    <input
-                      type="text"
-                      name="lastName"
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      className={`w-full pl-10 pr-4 py-3 bg-slate-700/50 border rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all ${
-                        errors.lastName ? 'border-red-500' : 'border-gray-600'
-                      }`}
-                      placeholder={t('auth.placeholders.lastName')}
-                    />
-                  </div>
-                  {errors.lastName && (
-                    <p className="text-red-400 text-sm mt-1">{errors.lastName}</p>
-                  )}
-                </div> */}
-              </div>
-            )}
+            {/* Google Login Button first */}
+            <button
+              type="button"
+              onClick={() => handleGoogleLogin()}
+              disabled={isLoading}
+              className="w-full flex items-center justify-center space-x-3 py-3 px-4 bg-slate-700/50 border border-gray-600 rounded-xl text-white hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50"
+            >
+              <GoogleIcon className="w-5 h-5" /> 
+              <span className="font-medium">
+                {isLogin ? t('auth.buttons.signInWithGoogle') : t('auth.buttons.signUpWithGoogle')}
+              </span>
+            </button>
+
+            {/* Divider */}
+            <div className="my-6 flex items-center">
+              <div className="flex-grow border-t border-gray-600"></div>
+              <span className="flex-shrink mx-4 text-gray-400 text-sm">
+                {t('auth.orContinueWith')}
+              </span>
+              <div className="flex-grow border-t border-gray-600"></div>
+            </div>
 
             {/* Email Field */}
             <div>
@@ -326,8 +329,6 @@ export default function AuthPage() {
                     email: '',
                     password: '',
                     confirmPassword: '',
-                    // firstName: '',
-                    // lastName: ''
                   });
                 }}
                 className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
@@ -336,6 +337,8 @@ export default function AuthPage() {
               </button>
             </p>
           </div>
+
+          
 
           {/* Forgot Password Link */}
           {isLogin && (

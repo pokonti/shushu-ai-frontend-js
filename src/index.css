@@ -1,3 +1,12 @@
 html {
     scroll-behavior: smooth;
 }
+
+body {
+    background-color: #581c87;
+    overflow-x: hidden;
+}
+
+html {
+    background-color: #581c87;
+}

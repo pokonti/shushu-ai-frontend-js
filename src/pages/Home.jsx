@@ -251,10 +251,37 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6 relative">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6">
+      <section id="features" className="py-20 px-6 relative overflow-hidden">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          {/* Floating Audio Waves */}
+          <div className="absolute top-20 left-10 w-32 h-32 opacity-10">
+            <div className="flex items-end space-x-1 h-full">
+              {Array.from({ length: 8 }, (_, i) => (
+                <div
+                  key={i}
+                  className="bg-gradient-to-t from-purple-500 to-pink-500 w-2 animate-pulse"
+                  style={{
+                    height: `${30 + Math.sin(Date.now() / 1000 + i) * 50}%`,
+                    animationDelay: `${i * 0.1}s`,
+                    animationDuration: `${1 + i * 0.1}s`
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+          
+          {/* Video Frame Elements */}
+          <div className="absolute top-32 right-16 w-24 h-16 border-2 border-purple-400/20 rounded opacity-20 animate-pulse"></div>
+          <div className="absolute bottom-32 left-1/4 w-20 h-12 border-2 border-pink-400/20 rounded opacity-20 animate-pulse" style={{animationDelay: '1s'}}></div>
+          
+          {/* Connecting Lines */}
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-0.5 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
+          <div className="text-center mb-16 md:mb-24">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
               {t('home.features.title')} <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('home.features.titleHighlight')}</span>
             </h2>
             <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
@@ -262,17 +289,98 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 items-stretch">
+          {/* Features Grid with Creative Layout */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
             {features.map((feature, index) => (
               <div key={index} className="group relative">
-                <div className="h-full flex flex-col bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-purple-500/10">
-                  <div className="text-purple-400 mb-4 group-hover:scale-110 transition-transform">
-                    {feature.icon}
+                
+                {/* Feature Card with Advanced Design */}
+                <div className="relative bg-gradient-to-br from-slate-800/40 via-purple-900/20 to-slate-800/40 backdrop-blur-xl border border-purple-500/20 rounded-3xl p-8 overflow-hidden transform transition-all duration-700 hover:scale-105 hover:border-purple-400/40">
+                  
+                  {/* Animated Background Pattern */}
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                    <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-pink-500/5"></div>
+                    
+                    {/* Sound Wave Animation for Audio Features */}
+                    {(index === 0 || index === 2) && (
+                      <div className="absolute bottom-0 left-0 right-0 h-16 flex items-end justify-center space-x-1 opacity-20">
+                        {Array.from({ length: 20 }, (_, i) => (
+                          <div
+                            key={i}
+                            className="bg-gradient-to-t from-purple-400 to-pink-400 w-1 animate-pulse"
+                            style={{
+                              height: `${20 + Math.sin(i * 0.5) * 30}%`,
+                              animationDelay: `${i * 0.05}s`,
+                              animationDuration: '1.5s'
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+                    
+                    {/* Video Frame Animation for Video Features */}
+                    {(index === 1 || index === 3) && (
+                      <div className="absolute top-4 right-4 opacity-20">
+                        {Array.from({ length: 3 }, (_, i) => (
+                          <div
+                            key={i}
+                            className="absolute w-12 h-8 border border-purple-400 rounded"
+                            style={{
+                              transform: `translate(${i * 4}px, ${i * 4}px)`,
+                              opacity: 1 - (i * 0.3)
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
                   </div>
-                  <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
-                  <p className="text-gray-400 flex-grow">{feature.description}</p>
+
+                  {/* Content */}
+                  <div className="relative z-10">
+                    {/* Icon with Enhanced Design */}
+                    <div className="mb-6 relative">
+                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-purple-400/20 group-hover:scale-110 transition-transform duration-500">
+                        <div className="text-purple-400 group-hover:text-purple-300 transition-colors">
+                          {feature.icon}
+                        </div>
+                      </div>
+                      
+                      {/* Processing Indicator */}
+                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      </div>
+                    </div>
+
+                    <h3 className="text-2xl font-bold mb-4 group-hover:text-purple-300 transition-colors">
+                      {feature.title}
+                    </h3>
+                    
+                    <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors">
+                      {feature.description}
+                    </p>
+
+                    {/* Progress Bar Animation */}
+                    <div className="mt-6 relative">
+                      <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
+                        <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
+                      </div>
+                      <div className="absolute right-0 top-2 text-xs text-purple-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-500">
+                        AI Processing
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-opacity -z-10"></div>
+
+                {/* Enhanced Glow Effect */}
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-purple-500/20 to-pink-500/0 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10"></div>
+                
+                {/* Connection Lines Between Features */}
+                {index < features.length - 1 && (
+                  <div className="hidden lg:block absolute top-1/2 left-full w-16 h-0.5 bg-gradient-to-r from-purple-500/50 to-transparent transform -translate-y-1/2 z-0">
+                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -389,7 +497,7 @@ const Home = () => {
                 </button>
               </Link>
               <div className="text-gray-400 text-sm">
-                {t('home.cta.noCard')}  {t('home.cta.cancelAnytime')}
+                {t('home.cta.noCard')} <br/> {t('home.cta.cancelAnytime')}
               </div>
             </div>
           </div>
