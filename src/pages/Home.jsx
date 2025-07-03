@@ -233,7 +233,6 @@ const Home = () => {
                   <video 
                     className="w-full h-40 sm:h-48 md:h-56 object-cover"
                     controls
-                    muted
                     loop
                     playsInline
                     preload="metadata"
