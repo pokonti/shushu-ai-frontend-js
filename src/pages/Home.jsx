@@ -10,11 +10,12 @@ const Home = () => {
   const { t } = useTranslation();
   const features = useFeatures();
   const [audioLevel, setAudioLevel] = useState(0);
+  
 
   useEffect(() => {
     const interval = setInterval(() => {
       setAudioLevel(Math.random() * 100);
-    }, 300);
+    }, 800);
     return () => clearInterval(interval);
   }, []);
 
@@ -35,6 +36,31 @@ const Home = () => {
     height: Math.random() * 60 + 20,
     delay: i * 0.1
   }));
+
+  const beforeVideoUrl = 'https://shushu-space.fra1.digitaloceanspaces.com/demo/example/original.mov';
+  const afterVideoUrl = 'https://shushu-space.fra1.digitaloceanspaces.com/demo/example/denoised.mov';
+
+  // Video error handling
+  const handleVideoError = (e, videoName) => {
+    const video = e.target;
+    console.error(`Error loading ${videoName} video:`, {
+      error: video.error,
+      networkState: video.networkState,
+      readyState: video.readyState,
+      currentSrc: video.currentSrc,
+      src: video.src
+    });
+    
+    if (video.error) {
+      const errorCodes = {
+        1: 'MEDIA_ERR_ABORTED - The fetching process was stopped.',
+        2: 'MEDIA_ERR_NETWORK - A network error occurred.',
+        3: 'MEDIA_ERR_DECODE - An error occurred while decoding.',
+        4: 'MEDIA_ERR_SRC_NOT_SUPPORTED - The audio/video format is not supported.'
+      };
+      console.log(`Error: ${errorCodes[video.error.code] || 'Unknown error'}`);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white overflow-hidden">
@@ -126,7 +152,6 @@ const Home = () => {
       <section id="demo" className="py-12 px-6">
         <div className="max-w-6xl mx-auto">
           <div className="bg-gradient-to-br from-purple-500/10 via-transparent to-pink-500/10 backdrop-blur-lg border border-white/10 rounded-3xl p-6 sm:p-8 md:p-16 shadow-2xl">
-            
             {/* Section Header */}
             <div className="text-center mb-12 md:mb-16">
               <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6">
@@ -154,16 +179,18 @@ const Home = () => {
                     <video 
                       className="w-full h-40 sm:h-48 md:h-56 object-cover"
                       controls
-                      poster="/path-to-before-thumbnail.jpg"
+                      preload="metadata"
+                      playsInline
+                      onError={(e) => handleVideoError(e, 'before')}
+                      onLoadStart={() => console.log('Before video: Loading started')}
+                      onCanPlay={() => console.log('Before video: Can play')}
+                      onLoadedMetadata={() => console.log('Before video: Metadata loaded')}
                     >
-                      <source src="/path-to-before-video.mp4" type="video/mp4" />
+                      <source src={beforeVideoUrl} type="video/quicktime" />
+                      <source src={beforeVideoUrl} type="video/mp4" />
+                      <source src={beforeVideoUrl} type="video/mov" />
                       Your browser does not support the video tag.
                     </video>
-                    
-                    {/* Play Overlay */}
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Play className="w-12 h-12 text-white" />
-                    </div>
                   </div>
                   
                   {/* Audio Quality Indicators */}
@@ -203,19 +230,23 @@ const Home = () => {
                   </div>
                   
                   <div className="relative bg-gray-900 rounded-2xl overflow-hidden">
-                    <video 
-                      className="w-full h-40 sm:h-48 md:h-56 object-cover"
-                      controls
-                      poster="/path-to-after-thumbnail.jpg"
-                    >
-                      <source src="/path-to-after-video.mp4" type="video/mp4" />
+                  <video 
+                    className="w-full h-40 sm:h-48 md:h-56 object-cover"
+                    controls
+                    muted
+                    loop
+                    playsInline
+                    preload="metadata"
+                    onError={(e) => handleVideoError(e, 'after')}
+                    onLoadStart={() => console.log('After video: Loading started')}
+                    onCanPlay={() => console.log('After video: Can play')}
+                    onLoadedMetadata={() => console.log('After video: Metadata loaded')}
+                  >
+                      <source src={afterVideoUrl} type="video/quicktime" />
+                      <source src={afterVideoUrl} type="video/mp4" />
+                      <source src={afterVideoUrl} type="video/mov" />
                       Your browser does not support the video tag.
                     </video>
-                    
-                    {/* Play Overlay */}
-                    <div className="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Play className="w-12 h-12 text-white" />
-                    </div>
                   </div>
                   
                   {/* Audio Quality Indicators */}
@@ -244,8 +275,6 @@ const Home = () => {
                 </div>
               </div>
             </div>
-
-      
           </div>
         </div>
       </section>
