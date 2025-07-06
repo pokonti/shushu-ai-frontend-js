@@ -1,6 +1,6 @@
 import AuthService from './authService';
 
-const API_BASE_URL = 'https://api.shushu.cam'; 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL; 
 
 // Polling interval presets
 export const POLLING_INTERVALS = {
