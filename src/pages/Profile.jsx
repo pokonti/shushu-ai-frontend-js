@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { User, Mail, Calendar, Edit, Save, X, Camera, ArrowLeft,Settings,Key,
+import { User, Mail, Calendar, Camera, ArrowLeft,Settings,Key,
   Shield,Folder,Plus, Grid, List, Search, Filter } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
@@ -8,9 +8,7 @@ export default function Profile() {
   const { t } = useTranslation();
   const [userInfo, setUserInfo] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editData, setEditData] = useState({});
-  const [isSaving, setIsSaving] = useState(false);
+
   const [activeTab, setActiveTab] = useState('profile');
   const [projectsView, setProjectsView] = useState('grid');
   const [searchTerm, setSearchTerm] = useState('');
@@ -141,11 +139,7 @@ export default function Profile() {
         const userData = await AuthService.getCurrentUser();
         
         setUserInfo(userData);
-        setEditData({
-          first_name: userData.first_name || '',
-          last_name: userData.last_name || '',
-          email: userData.email || userData.username || '',
-        });
+
       } catch (error) {
         console.error('Failed to fetch user data:', error);
         setError(error.message);
@@ -162,43 +156,7 @@ export default function Profile() {
     fetchUserData();
   }, []);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      // Here you would typically make an API call to update user data
-      // For now, we'll just simulate the update
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update local state (in a real app, you'd get the updated data from the API)
-      setUserInfo(prev => ({
-        ...prev,
-        ...editData
-      }));
-      
-      setIsEditing(false);
-    } catch (error) {
-      console.error('Failed to update profile:', error);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleCancel = () => {
-    setEditData({
-      first_name: userInfo.first_name || '',
-      last_name: userInfo.last_name || '',
-      email: userInfo.email || userInfo.username || '',
-    });
-    setIsEditing(false);
-  };
 
   if (isLoading) {
     return (
@@ -299,10 +257,7 @@ export default function Profile() {
                   )}
                 </div>
                 <h3 className="text-xl font-bold text-white">
-                  {userInfo.first_name || userInfo.last_name 
-                    ? `${userInfo.first_name || ''} ${userInfo.last_name || ''}`.trim()
-                    : userInfo.username || 'User'
-                  }
+                  {userInfo.username || 'User'}
                 </h3>
                 <p className="text-gray-400">{userInfo.email || userInfo.username}</p>
                 
@@ -369,91 +324,25 @@ export default function Profile() {
               <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-purple-800/30 p-8">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-bold text-white">{t('profile.profileInfo.title')}</h2>
-                  {!isEditing ? (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="flex items-center space-x-2 bg-purple-500/20 text-purple-300 px-4 py-2 rounded-lg hover:bg-purple-500/30 transition-colors"
-                    >
-                      <Edit className="w-4 h-4" />
-                      <span>{t('common.edit')}</span>
-                    </button>
-                  ) : (
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={handleSave}
-                        disabled={isSaving}
-                        className="flex items-center space-x-2 bg-green-500/20 text-green-300 px-4 py-2 rounded-lg hover:bg-green-500/30 transition-colors disabled:opacity-50"
-                      >
-                        <Save className="w-4 h-4" />
-                        <span>{isSaving ? t('common.loading') : t('common.save')}</span>
-                      </button>
-                      <button
-                        onClick={handleCancel}
-                        className="flex items-center space-x-2 bg-gray-500/20 text-gray-300 px-4 py-2 rounded-lg hover:bg-gray-500/30 transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                        <span>{t('common.cancel')}</span>
-                      </button>
-                    </div>
-                  )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">
-                      {t('auth.fields.firstName')}
+                      {t('auth.fields.username')}
                     </label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        name="first_name"
-                        value={editData.first_name}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-slate-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      />
-                    ) : (
-                      <div className="px-4 py-3 bg-slate-700/30 border border-gray-600 rounded-xl text-white">
-                        {userInfo.first_name || 'Not provided'}
-                      </div>
-                    )}
+                    <div className="px-4 py-3 bg-slate-700/30 border border-gray-600 rounded-xl text-white">
+                      {userInfo.username || 'Not provided'}
+                    </div>
                   </div>
-
+                  
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2">
-                      {t('auth.fields.lastName')}
-                    </label>
-                    {isEditing ? (
-                      <input
-                        type="text"
-                        name="last_name"
-                        value={editData.last_name}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-slate-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      />
-                    ) : (
-                      <div className="px-4 py-3 bg-slate-700/30 border border-gray-600 rounded-xl text-white">
-                        {userInfo.last_name || 'Not provided'}
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="md:col-span-2">
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       {t('auth.fields.email')}
                     </label>
-                    {isEditing ? (
-                      <input
-                        type="email"
-                        name="email"
-                        value={editData.email}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-slate-700/50 border border-gray-600 rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                      />
-                    ) : (
-                      <div className="px-4 py-3 bg-slate-700/30 border border-gray-600 rounded-xl text-white">
-                        {userInfo.email || userInfo.username}
-                      </div>
-                    )}
+                    <div className="px-4 py-3 bg-slate-700/30 border border-gray-600 rounded-xl text-white">
+                      {userInfo.email || 'Not provided'}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -464,7 +353,10 @@ export default function Profile() {
               <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl border border-purple-800/30 p-8">
                 <div className="flex items-center justify-between mb-8">
                   <h2 className="text-2xl font-bold text-white">{t('profile.projects.title')}</h2>
-                  <button className="flex items-center space-x-2 bg-purple-500/20 text-purple-300 px-4 py-2 rounded-lg hover:bg-purple-500/30 transition-colors">
+                  <button 
+                    onClick={() => window.location.href = '/editor'}
+                    className="flex items-center space-x-2 bg-purple-500/20 text-purple-300 px-4 py-2 rounded-lg hover:bg-purple-500/30 transition-colors"
+                  >
                     <Plus className="w-4 h-4" />
                     <span>{t('profile.projects.createProject')}</span>
                   </button>
@@ -515,7 +407,7 @@ export default function Profile() {
                 {/* Projects List */}
                 <div className="text-center text-gray-400 py-12">
                   <Folder className="w-16 h-16 mx-auto mb-4 text-gray-600" />
-                  <p className="text-lg">{t('profile.projects.noProjects')}</p>
+                  <p className="text-lg">{t('profile.projects.inProgress')}</p>
                 </div>
               </div>
             )}

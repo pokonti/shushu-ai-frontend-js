@@ -29,10 +29,10 @@
     "projects": "Проекты",
     "welcome": "Добро пожаловать",
     "help": "Помощь",
-    "support": "Поддержка",
     "privacy": "Конфиденциальность",
-    "terms": "Условия",
-    "madeIn": "Сделано в n!"
+    "copyright": "© 2025 Shushu AI. Все права защищены.",
+    "contactEmail": "aknurseidazym@gmail.com",
+    "instagram": "_shushu_ai"
   },
   "home": {
     "hero": {
@@ -198,6 +198,7 @@
     "fields": {
       "firstName": "Имя",
       "lastName": "Фамилия",
+      "username": "Имя пользователя",
       "email": "Email адрес",
       "password": "Пароль",
       "confirmPassword": "Подтвердите пароль"
@@ -251,6 +252,7 @@
       "title": "Мои проекты",
       "search": "Поиск проектов...",
       "noProjects": "Проекты не найдены",
+      "inProgress": "Эта страница в разработке",
       "createProject": "Создать новый проект"
     }
   },

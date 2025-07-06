@@ -1,5 +1,5 @@
 import React from 'react';
-import { Wand2 } from 'lucide-react';
+import { Wand2, Mail, Instagram } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
@@ -16,11 +16,29 @@ const Footer = () => {
             <span className="text-xl font-bold">{t('common.brand')}</span>
           </div>
 
-          <div className="flex items-center space-x-6 text-gray-400">
-            <a href="#" className="hover:text-white transition-colors">{t('navigation.privacy')}</a>
-            <a href="#" className="hover:text-white transition-colors">{t('navigation.terms')}</a>
-            <a href="#" className="hover:text-white transition-colors">{t('navigation.support')}</a>
-            <a href="https://www.nfactorial.school/" target="_blank" rel="noreferrer" className="hover:text-white transition-colors">{t('navigation.madeIn')}</a>
+          <div className="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+            <div className="flex items-center space-x-6 text-gray-400">
+              <span className="text-sm">{t('navigation.copyright')}</span>
+            </div>
+            
+            <div className="flex items-center space-x-6">
+              <a 
+                href={`mailto:${t('navigation.contactEmail')}`}
+                className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+                <span className="text-sm">{t('navigation.contactEmail')}</span>
+              </a>
+              <a 
+                href={`https://instagram.com/${t('navigation.instagram')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+              >
+                <Instagram className="w-4 h-4" />
+                <span className="text-sm">{t('navigation.instagram')}</span>
+              </a>
+            </div>
           </div>
         </div>
       </div>

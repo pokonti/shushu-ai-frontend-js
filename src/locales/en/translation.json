@@ -29,10 +29,10 @@
     "projects": "Projects",
     "welcome": "Welcome",
     "help": "Help",
-    "support": "Support",
     "privacy": "Privacy",
-    "terms": "Terms",
-    "madeIn": "Made in n!"
+    "copyright": "© 2025 Shushu AI. All rights reserved.",
+    "contactEmail": "aknurseidazym@gmail.com",
+    "instagram": "_shushu_ai"
   },
   "home": {
     "hero": {
@@ -198,6 +198,7 @@
     "fields": {
       "firstName": "First Name",
       "lastName": "Last Name",
+      "username": "Username",
       "email": "Email Address",
       "password": "Password",
       "confirmPassword": "Confirm Password"
@@ -251,6 +252,7 @@
       "title": "My Projects",
       "search": "Search projects...",
       "noProjects": "No projects found",
+      "inProgress": "This page is in process",
       "createProject": "Create New Project"
     }
   },
