@@ -4,10 +4,10 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Polling interval presets
 export const POLLING_INTERVALS = {
-  FAST: 1000,     // 1 second - for quick testing
-  NORMAL: 2000,   // 2 seconds - good balance
-  SLOW: 5000,     // 5 seconds - less server load
-  VERY_SLOW: 10000 // 10 seconds - minimal server impact
+  FAST: 30000,    // 30 seconds - for quick testing
+  NORMAL: 60000,  // 1 minute - good balance (default)
+  SLOW: 120000,   // 2 minutes - less server load
+  VERY_SLOW: 300000 // 5 minutes - minimal server impact
 };
 
 /**
@@ -19,7 +19,7 @@ export const POLLING_INTERVALS = {
  * @param {function} params.onUploadProgress - A callback function to report upload progress.
  * @param {function} params.onProcessingUpdate - A callback function to report processing status updates.
  * @param {boolean} params.useBackendUpload - Whether to upload through backend (avoids CORS issues).
- * @param {number} params.pollingIntervalMs - How often to poll job status in milliseconds (default: 2000ms).
+ * @param {number} params.pollingIntervalMs - How often to poll job status in milliseconds (default: 60000ms = 1 minute).
  * @returns {Promise<object>} - The final response from the server after processing.
  */
 export async function uploadAndProcessFile({ 
@@ -29,7 +29,7 @@ export async function uploadAndProcessFile({
   onUploadProgress, 
   onProcessingUpdate, 
   useBackendUpload = false,
-  pollingIntervalMs = 2000
+  pollingIntervalMs = 60000
 }) {
   const token = AuthService.getToken();
   if (!token) {
@@ -194,12 +194,12 @@ async function uploadThroughBackend(file, token, onUploadProgress) {
  * @param {number} pollingIntervalMs - How often to poll in milliseconds.
  * @returns {Promise<object>} - The final job result.
  */
-async function pollJobStatus(jobId, fileType, token, onProcessingUpdate, pollingIntervalMs = 2000) {
+async function pollJobStatus(jobId, fileType, token, onProcessingUpdate, pollingIntervalMs = 60000) {
   const mediaType = fileType === 'video' ? 'video' : 'audio';
   const statusEndpoint = `${API_BASE_URL}/jobs/${jobId}/status?media_type=${mediaType}`;
   
   let pollCount = 0;
-  const maxPolls = Math.ceil(600000 / pollingIntervalMs); // Maximum 10 minutes of polling
+  const maxPolls = Math.ceil(3600000 / pollingIntervalMs); // Maximum 1 hour of polling
   
   return new Promise((resolve, reject) => {
     const pollInterval = setInterval(async () => {

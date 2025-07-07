@@ -24,7 +24,6 @@ export default function AudioVideoUpload() {
   const fileInputRef = useRef(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const API_BASE_URL = 'http://localhost:8000';
   const MAX_FILE_SIZE = 150 * 1024 * 1024; // 150MB in bytes
 
   useEffect(() => {
@@ -138,32 +137,6 @@ export default function AudioVideoUpload() {
     setProgressMessage('');
   };
 
-  const simulateProgress = (duration = 30000) => {
-    const interval = 100; // Update every 100ms
-    const steps = duration / interval;
-    let currentStep = 0;
-
-    const progressInterval = setInterval(() => {
-      currentStep++;
-      const newProgress = Math.min((currentStep / steps) * 90, 90); // Cap at 90% until actual completion
-      setProgress(newProgress);
-
-      // Update progress messages
-      if (newProgress < 30) {
-        setProgressMessage(t('upload.processing.initializing'));
-      } else if (newProgress < 60) {
-        setProgressMessage(t('upload.processing.processing', { type: fileType }));
-      } else if (newProgress < 90) {
-        setProgressMessage(t('upload.processing.finalizing'));
-      }
-
-      if (currentStep >= steps) {
-        clearInterval(progressInterval);
-      }
-    }, interval);
-
-    return progressInterval;
-  };
 
   const removeFile = () => {
     setFile(null);
@@ -202,7 +175,7 @@ export default function AudioVideoUpload() {
         fileType, 
         options,
         onUploadProgress,
-        pollingIntervalMs: POLLING_INTERVALS.VERY_SLOW
+        pollingIntervalMs: POLLING_INTERVALS.NORMAL
       });
       
       // The rest of your existing logic can remain the same
@@ -518,17 +491,23 @@ export default function AudioVideoUpload() {
                 </div>
                 {/* Remove Fillers Option */}
                 <div
-                  className={`flex flex-col items-center p-4 sm:p-6 rounded-xl border-2 transition-all shadow-md select-none relative opacity-50 cursor-not-allowed border-gray-600`}
+                  className={`flex flex-col items-center p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
+                    options.removeFillers ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
+                  }`}
+                  onClick={() => handleOptionChange('removeFillers')}
                 >
+                  {/* Tick at top right */}
+                  {options.removeFillers && (
+                    <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center z-10">
+                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
+                    </span>
+                  )}
                   <div className="flex flex-col items-center mb-2">
-                    <X className="w-6 h-6 sm:w-8 sm:h-8 mb-2 text-gray-500" />
+                    <X className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${options.removeFillers ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
-                  <span className="font-semibold text-gray-400 text-base sm:text-lg text-center">{t('upload.options.removeFillers.title')}</span>
-                  <span className="text-gray-500 text-center text-xs sm:text-sm mt-2">
+                  <span className="font-semibold text-white text-base sm:text-lg text-center">{t('upload.options.removeFillers.title')}</span>
+                  <span className="text-gray-300 text-center text-xs sm:text-sm mt-2">
                     {t('upload.options.removeFillers.description')}
-                  </span>
-                  <span className="text-gray-500 text-center text-xs mt-2 font-medium">
-                    Coming Soon
                   </span>
                 </div>
                 {/* Summarize Option */}
