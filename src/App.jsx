@@ -10,7 +10,6 @@ import AudioVideoUpload from './pages/AudioVideoUpload';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
 import AnalyticsTracker from './components/AnalyticsTracker';
-import { Analytics } from '@vercel/analytics/next';
 // import Shorts from './pages/Shorts';
 
 function App() {
@@ -19,7 +18,6 @@ function App() {
     <>
        <Router>
        <AnalyticsTracker />
-       <Analytics />
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path='/login' element={<AuthPage/>}/>
