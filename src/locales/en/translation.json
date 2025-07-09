@@ -158,6 +158,7 @@
       "title": "Summary"
     },
     "options": {
+      "title": "Choose Processing Option",
       "denoise": {
         "title": "Denoise",
         "description": "Remove background noise and enhance audio clarity using advanced AI algorithms."
@@ -165,10 +166,6 @@
       "removeFillers": {
         "title": "Remove Fillers",
         "description": "Automatically detect and remove \"um\", \"uh\", and other filler words from speech."
-      },
-      "summarize": {
-        "title": "Summarize",
-        "description": "Generate an intelligent summary of your content with key points and insights."
       }
     },
     "buttons": {
@@ -182,6 +179,47 @@
       "fileSizeExceeded": "File size ({{fileSize}}) exceeds the maximum limit of {{maxSize}}. Please choose a smaller file.",
       "invalidFileType": "Invalid File Type",
       "unsupportedFormat": "This file format is not supported. Please use video files (MP4, MOV, MKV) or audio files (MP3, WAV)."
+    }
+  },
+  "shorts": {
+    "badge": "AI-Powered Video Editing",
+    "title": "Generate Viral",
+    "titleHighlight": "Short Videos",
+    "description": "Transform your long-form videos into engaging shorts by automatically extracting the most important clips, adding relevant B-roll footage, and generating synchronized subtitles to maximize viewer engagement.",
+    "loginRequired": {
+      "badge": "Authentication Required",
+      "title": "Login Required",
+      "description": "Please log in to access the AI-powered shorts generator and create viral short videos from your content."
+    },
+    "upload": {
+      "title": "Upload Your Video",
+      "description": "Upload a video file to automatically generate engaging short clips with B-roll and subtitles",
+      "button": "Choose Video File"
+    },
+    "processing": {
+      "initializing": "Initializing shorts generation...",
+      "uploading": "Uploading video... {{progress}}%",
+      "analyzing": "Analyzing video content and extracting highlights...",
+      "addingBroll": "Adding B-roll footage and generating subtitles...",
+      "complete": "Shorts generation complete!",
+      "uploadStatus": "Upload Status:",
+      "videoProcessing": "Video processing"
+    },
+    "success": {
+      "title": "Shorts Generated Successfully!",
+      "description": "Your viral short videos have been created with important clips, B-roll footage, and synchronized subtitles.",
+      "downloadLink": "Download Your Shorts"
+    },
+    "errors": {
+      "title": "Generation Error",
+      "invalidFileType": "Please upload a valid video file (.mp4, .mov, .mkv, .avi, .webm)",
+      "fileSizeExceeded": "File size too large ({{fileSize}}). Maximum allowed size is {{maxSize}}",
+      "unknownError": "An unknown error occurred during shorts generation."
+    },
+    "buttons": {
+      "uploadingVideo": "Uploading Video...",
+      "generatingShorts": "Generating Shorts...",
+      "generateShorts": "Generate Viral Shorts"
     }
   },
   "auth": {
@@ -263,8 +301,5 @@
     "mainTitleHighlight": "Found",
     "description": "The page you're looking for seems to have vanished into the digital void. Don't worry, even the best explorers sometimes take a wrong turn.",
     "goHome": "Go Back Home"
-  },
-  "shorts": {
-    "description": "Upload a video and instantly get a short AI-edited clip optimized for TikTok, Reels, or Shorts."
   }
 } 

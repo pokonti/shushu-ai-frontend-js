@@ -10,7 +10,7 @@ import AudioVideoUpload from './pages/AudioVideoUpload';
 import Profile from './pages/Profile';
 import AuthPage from './pages/AuthPage';
 import AnalyticsTracker from './components/AnalyticsTracker';
-// import Shorts from './pages/Shorts';
+import Shorts from './pages/Shorts';
 
 function App() {
 
@@ -23,7 +23,7 @@ function App() {
                 <Route path='/login' element={<AuthPage/>}/>
                 <Route path="/editor" element={<AudioVideoUpload />} />
                 <Route path="/profile" element={<Profile/>} />
-                {/* <Route path="/shorts" element={<Shorts />} /> */}
+                <Route path="/shorts" element={<Shorts />} />
                 <Route path="*" element={<NotFoundPage />} />
             </Routes>
         </Router>

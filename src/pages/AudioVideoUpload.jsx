@@ -3,6 +3,7 @@ import { Upload, Video, Music, Loader2, CheckCircle2, X, AlertCircle, Play, Arro
 import { useTranslation } from 'react-i18next';
 import AuthService from '../services/authService';
 import { uploadAndProcessFile, POLLING_INTERVALS } from '../services/uploadService';
+import LoginRequired from '../components/LoginRequired';
 
 export default function AudioVideoUpload() {
   const { t } = useTranslation();
@@ -16,11 +17,7 @@ export default function AudioVideoUpload() {
   const [processResult, setProcessResult] = useState(null);
   const [error, setError] = useState(null);
   const [fileType, setFileType] = useState(null);
-  const [options, setOptions] = useState({
-    denoise: false,
-    removeFillers: false,
-    summarize: false
-  });
+  const [selectedOption, setSelectedOption] = useState('denoise'); // 'denoise' or 'removeFillers'
   const fileInputRef = useRef(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -148,10 +145,7 @@ export default function AudioVideoUpload() {
   };
 
   const handleOptionChange = (option) => {
-    setOptions(prev => ({
-      ...prev,
-      [option]: !prev[option]
-    }));
+    setSelectedOption(option);
   };
 
   const handleProcess = async () => {
@@ -169,6 +163,13 @@ export default function AudioVideoUpload() {
         setProgress(uploadProgress);
         setProgressMessage(t('upload.processing.uploading', { progress: Math.round(percent) }));
       };
+      
+      // Convert selectedOption to the format expected by the service
+      const options = {
+        denoise: selectedOption === 'denoise',
+        removeFillers: selectedOption === 'removeFillers'
+      };
+      
       // Call the all-in-one service function, now passing the fileType
       const result = await uploadAndProcessFile({
         file,
@@ -216,9 +217,8 @@ export default function AudioVideoUpload() {
   };
 
   const shouldShowDownloadLink = () => {
-    // Show download link if any processing option (denoise or removeFillers) is selected
-    // Hide download link if only summarize is selected
-    return options.denoise || options.removeFillers;
+    // Always show download link since we're always processing
+    return true;
   };
 
   const isProcessing = uploading || processing;
@@ -243,54 +243,9 @@ export default function AudioVideoUpload() {
       </div>
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         
-        {/* Enhanced Login Required Section */}
+        {/* Login Required Section */}
         {!isLoggedIn ? (
-          <div className="max-w-3xl mx-auto relative">
-            {/* Animated Background Elements */}
-            <div className="absolute inset-0 overflow-hidden rounded-3xl">
-              <div className="absolute -top-4 -left-4 w-24 h-24 bg-purple-500/20 rounded-full blur-xl animate-pulse"></div>
-              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-pink-500/20 rounded-full blur-xl animate-pulse" style={{animationDelay: '1s'}}></div>
-              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-full blur-2xl animate-pulse" style={{animationDelay: '2s'}}></div>
-            </div>
-
-            <div className="relative bg-gradient-to-br from-slate-800/80 via-purple-900/30 to-slate-800/80 backdrop-blur-xl border border-purple-500/30 rounded-3xl p-8 sm:p-12 text-center shadow-2xl">
-              
-              {/* Badge */}
-              <div className="inline-flex items-center space-x-2 bg-gradient-to-r from-orange-500/20 to-red-500/20 border border-orange-500/30 rounded-full px-4 py-2 mb-6">
-                <AlertCircle className="w-4 h-4 text-orange-400" />
-                <span className="text-sm text-orange-300 font-medium">{t('auth.authenticationRequired')}</span>
-              </div>
-
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent">
-                {t('upload.loginRequired.title')}
-              </h2>
-              
-              <p className="text-lg text-gray-300 mb-8 max-w-2xl mx-auto leading-relaxed">
-                {t('upload.loginRequired.description')}
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <a href="/login">
-                  <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-bold text-lg text-white hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-3 relative overflow-hidden">
-                    <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                    <span className="relative z-10">{t('upload.loginRequired.loginLink')}</span>
-                    <ArrowLeft className="w-5 h-5 relative z-10 rotate-180 group-hover:translate-x-1 transition-transform" />
-                  </button>
-                </a>
-                
-                <a href="/">
-                  <button className="flex items-center space-x-2 px-6 py-3 border border-purple-500/50 rounded-full font-semibold text-purple-300 hover:border-purple-400 hover:text-purple-200 hover:bg-purple-500/10 transition-all">
-                    <ArrowLeft className="w-4 h-4" />
-                    <span>{t('common.back')} {t('auth.backToHome')}</span>
-                  </button>
-                </a>
-              </div>
-
-              {/* Bottom accent */}
-              <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-500 rounded-b-3xl"></div>
-            </div>
-          </div>
+          <LoginRequired />
         ) : (
         <>
         {/* Hero Section */}
@@ -428,25 +383,7 @@ export default function AudioVideoUpload() {
                   </div>
                 )}
 
-                {/* Summary Box */}
-                {processResult && processResult.summary && (
-                  <div className="mb-6 sm:mb-8 max-w-2xl mx-auto">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="text-base sm:text-lg font-bold text-white">{t('upload.summary.title')}</h3>
-                      <button
-                        className="text-purple-400 hover:text-purple-200 px-2 sm:px-3 py-1 rounded transition-colors border border-purple-400 hover:bg-purple-500/20 text-xs sm:text-sm"
-                        onClick={() => {
-                          navigator.clipboard.writeText(processResult.summary);
-                        }}
-                      >
-                        {t('common.copy')}
-                      </button>
-                    </div>
-                    <div className="bg-slate-800/80 border border-purple-700 rounded-lg p-3 sm:p-4 text-gray-200 whitespace-pre-line text-sm sm:text-base font-mono overflow-x-auto">
-                      {processResult.summary}
-                    </div>
-                  </div>
-                )}
+
               </div>
             )}
           </div>
@@ -464,71 +401,52 @@ export default function AudioVideoUpload() {
             </div>
           )}
 
-          {/* Option Checkboxes */}
+          {/* Option Selection */}
           {file && !processResult && (
             <div className="mb-6 sm:mb-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              <h3 className="text-white font-semibold text-lg sm:text-xl mb-4 text-center">
+                {t('upload.options.title', 'Choose Processing Option')}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 {/* Denoise Option */}
                 <div
                   className={`flex flex-col items-center p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
-                    options.denoise ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
+                    selectedOption === 'denoise' ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
                   }`}
                   onClick={() => handleOptionChange('denoise')}
                 >
-                  {/* Tick at top right */}
-                  {options.denoise && (
+                  {selectedOption === 'denoise' && (
                     <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center z-10">
                       <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                     </span>
                   )}
                   <div className="flex flex-col items-center mb-2">
-                    <CheckCircle2 className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${options.denoise ? 'text-purple-400' : 'text-gray-400'}`} />
+                    <CheckCircle2 className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${selectedOption === 'denoise' ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
                   <span className="font-semibold text-white text-base sm:text-lg text-center">{t('upload.options.denoise.title')}</span>
                   <span className="text-gray-300 text-center text-xs sm:text-sm mt-2">
                     {t('upload.options.denoise.description')}
                   </span>
                 </div>
+
                 {/* Remove Fillers Option */}
                 <div
                   className={`flex flex-col items-center p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
-                    options.removeFillers ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
+                    selectedOption === 'removeFillers' ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
                   }`}
                   onClick={() => handleOptionChange('removeFillers')}
                 >
-                  {/* Tick at top right */}
-                  {options.removeFillers && (
+                  {selectedOption === 'removeFillers' && (
                     <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center z-10">
                       <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
                     </span>
                   )}
                   <div className="flex flex-col items-center mb-2">
-                    <X className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${options.removeFillers ? 'text-purple-400' : 'text-gray-400'}`} />
+                    <X className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${selectedOption === 'removeFillers' ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
                   <span className="font-semibold text-white text-base sm:text-lg text-center">{t('upload.options.removeFillers.title')}</span>
                   <span className="text-gray-300 text-center text-xs sm:text-sm mt-2">
                     {t('upload.options.removeFillers.description')}
-                  </span>
-                </div>
-                {/* Summarize Option */}
-                <div
-                  className={`flex flex-col items-center p-4 sm:p-6 rounded-xl border-2 cursor-pointer transition-all shadow-md select-none relative ${
-                    options.summarize ? 'border-purple-500 bg-purple-500/10 ring-2 ring-purple-400' : 'border-gray-600 hover:border-purple-400'
-                  }`}
-                  onClick={() => handleOptionChange('summarize')}
-                >
-                  {/* Tick at top right */}
-                  {options.summarize && (
-                    <span className="absolute top-2 right-2 bg-purple-500 rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center z-10">
-                      <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
-                    </span>
-                  )}
-                  <div className="flex flex-col items-center mb-2">
-                    <AlertCircle className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${options.summarize ? 'text-purple-400' : 'text-gray-400'}`} />
-                  </div>
-                  <span className="font-semibold text-white text-base sm:text-lg text-center">{t('upload.options.summarize.title')}</span>
-                  <span className="text-gray-300 text-center text-xs sm:text-sm mt-2">
-                    {t('upload.options.summarize.description')}
                   </span>
                 </div>
               </div>
