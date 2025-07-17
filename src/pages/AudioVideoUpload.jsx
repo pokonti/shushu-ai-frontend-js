@@ -103,20 +103,15 @@ export default function AudioVideoUpload() {
   };
 
   const isValidFileType = (file) => {
-    const validExtensions = ['.mp4', '.mov', '.mkv', '.mp3', '.wav'];
-    return validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
-  };
-
-  // Legacy function for backward compatibility - now just calls isValidFileType
-  const isValidFile = (file) => {
-    return isValidFileType(file);
+    const validExtensions = ['.mp4', '.mov', '.mkv', '.mp3', '.wav', '.MP4', '.MOV', '.MKV', '.MP3', '.WAV'];
+    return validExtensions.some(ext => file.name.endsWith(ext));
   };
 
   const getFileType = (file) => {
-    const videoExtensions = ['.mp4', '.mov', '.mkv'];
-    const audioExtensions = ['.mp3', '.wav'];
+    const videoExtensions = ['.mp4', '.mov', '.mkv', '.MP4', '.MOV', '.MKV'];
+    const audioExtensions = ['.mp3', '.wav', '.MP3', '.WAV'];
     
-    const fileName = file.name.toLowerCase();
+    const fileName = file.name;
     
     if (videoExtensions.some(ext => fileName.endsWith(ext))) {
       return 'video';
@@ -217,7 +212,6 @@ export default function AudioVideoUpload() {
   };
 
   const shouldShowDownloadLink = () => {
-    // Always show download link since we're always processing
     return true;
   };
 
@@ -297,7 +291,7 @@ export default function AudioVideoUpload() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".mp4,.mov,.mkv,.mp3,.wav"
+                  accept=".mp4,.mov,.mkv,.mp3,.wav,.MP4,.MOV,.MKV,.MP3,.WAV"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
