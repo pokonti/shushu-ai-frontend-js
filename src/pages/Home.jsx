@@ -22,7 +22,7 @@ const Home = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show floating CTA after scrolling past hero section
+      // Show floating CTA after scrolling past hero section until end of page
       const scrollPosition = window.scrollY;
       setShowFloatingCTA(scrollPosition > 800);
     };
@@ -559,17 +559,17 @@ const Home = () => {
       <section className="py-20 px-6">
         <div className="max-w-4xl mx-auto text-center">
           <div className="bg-gradient-to-r from-purple-500/10 to-pink-500/10 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 md:p-12">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6">
               {t('home.cta.title')}
             </h2>
-            <p className="text-lg sm:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-300 mb-8 max-w-2xl mx-auto">
               {t('home.cta.description')}
             </p>
             
             <div className="flex flex-col items-center justify-center space-y-6">
               {/* Primary CTA */}
               <Link to="/editor" className="group">
-                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-3 text-white border-0 min-w-[300px] justify-center">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-12 py-5 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-3 text-white border-0 min-w-[300px] justify-center">
                   <span>{t('home.cta.button')}</span>
                   <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                 </button>
@@ -598,16 +598,18 @@ const Home = () => {
       </section>
 
       {/* Floating CTA */}
-      {showFloatingCTA && (
-        <div className="fixed bottom-6 right-6 z-40 animate-in slide-in-from-bottom-4 duration-300">
-          <Link to="/editor" className="group">
-            <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-full font-bold hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2 text-white border-0 shadow-xl">
-              <span>{t('home.floating.enhanceAudio', 'Enhance Audio')}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-          </Link>
-        </div>
-      )}
+      <div className={`fixed bottom-[74px] right-6 z-40 transition-all duration-500 ease-in-out transform ${
+        showFloatingCTA 
+          ? 'opacity-100 translate-y-0 scale-100' 
+          : 'opacity-0 translate-y-4 scale-95 pointer-events-none'
+      }`}>
+        <Link to="/editor" className="group">
+          <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-full font-bold hover:shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 hover:scale-105 flex items-center space-x-2 text-white border-0 shadow-xl">
+            <span>{t('home.floating.enhanceAudio', 'Enhance Audio')}</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+          </button>
+        </Link>
+      </div>
 
       <Footer/>
     </div>
