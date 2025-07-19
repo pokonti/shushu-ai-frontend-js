@@ -22,6 +22,9 @@
   "navigation": {
     "features": "Features",
     "pricing": "Pricing",
+    "demo": "Demo",
+    "editor": "Editor",
+    "shorts": "Shorts",
     "getStarted": "Get Started",
     "login": "Login",
     "logout": "Logout",
@@ -41,7 +44,8 @@
       "titleHighlight": "Viral Magic",
       "subtitle": "Automatically clean, edit, and create viral clips from your podcasts and videos.",
       "startCreating": "Start Creating Now",
-      "watchDemo": "Watch Demo"
+      "watchDemo": "Watch Demo",
+      "noCreditCard": "No credit card required • Start for free"
     },
     "features": {
       "title": "Powered by",
@@ -62,7 +66,25 @@
       "feature2": "Eliminates background noise automatically",
       "feature3": "Normalizes audio levels for consistency",
       "feature4": "Generates trending short clips",
-      "demoLabel": "1 min demo"
+      "demoLabel": "1 min demo",
+      "readyToEnhance": "Ready to enhance your audio?",
+      "ctaDescription": "Get the same professional results for your videos and audio files in just a few clicks.",
+      "enhanceNow": "Enhance My Audio Now",
+      "ctaSubtext": "No signup required to try"
+    },
+    "nav": {
+      "intro": "1. Intro",
+      "demo": "2. Demo", 
+      "features": "3. Features",
+      "pricing": "4. Pricing"
+    },
+    "flow": {
+      "seeHowItWorks": "See how it works",
+      "exploreFeatures": "Explore our features",
+      "choosePlan": "Choose your plan"
+    },
+    "floating": {
+      "enhanceAudio": "Enhance Audio"
     },
     "pricing": {
       "title": "Simple,",
@@ -98,7 +120,10 @@
       "description": "Join thousands of creators who save hours every week with AI-powered editing. Start your free trial today - no credit card required.",
       "button": "Start Free Trial",
       "noCard": "✓ No credit card required",
-      "cancelAnytime": "✓ Cancel anytime"
+      "cancelAnytime": "✓ Cancel anytime",
+      "freeStart": "Free to start",
+      "instantAccess": "Instant access",
+      "noInstall": "No installation"
     }
   },
   "features": {

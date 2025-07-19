@@ -10,6 +10,7 @@ const Home = () => {
   const { t } = useTranslation();
   const features = useFeatures();
   const [audioLevel, setAudioLevel] = useState(0);
+  const [showFloatingCTA, setShowFloatingCTA] = useState(false);
   
 
   useEffect(() => {
@@ -17,6 +18,17 @@ const Home = () => {
       setAudioLevel(Math.random() * 100);
     }, 800);
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Show floating CTA after scrolling past hero section
+      const scrollPosition = window.scrollY;
+      setShowFloatingCTA(scrollPosition > 800);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Floating musical notes animation data
@@ -104,38 +116,41 @@ const Home = () => {
        
 
       {/* Hero Section */}
-      <section className="relative pt-24 pb-16 px-6">
+      <section id="hero" className="relative pt-32 md:pt-40 pb-16 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="text-center relative z-10">
             <div className="inline-flex items-center space-x-2 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-full px-4 py-2 mb-8">
               <Zap className="w-4 h-4 text-yellow-400" />
-              <span className="text-sm">{t('home.hero.badge')}</span>
+              <span className="text-sm font-medium tracking-wide">{t('home.hero.badge')}</span>
             </div>
             
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-6 bg-gradient-to-r from-white via-purple-200 to-pink-200 bg-clip-text text-transparent leading-tight tracking-tight">
               {t('home.hero.title')}
               <br />
-              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-extrabold tracking-tighter">
                 {t('home.hero.titleHighlight')}
               </span>
             </h1>
             
-            <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto leading-relaxed font-light tracking-wide">
               {t('home.hero.subtitle')}
             </p>
             
-            <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6 mb-12">
-              <Link to="/editor">
-                <button className="group bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
+            <div className="flex flex-col items-center justify-center space-y-6 mb-12">
+              {/* Primary CTA - Most Prominent */}
+              <Link to="/editor" className="group">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-3 text-white border-0 min-w-[280px] justify-center tracking-wide">
                   <span>{t('home.hero.startCreating')}</span>
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
-              <a href="#demo" className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
-                <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors">
+              
+              {/* Secondary CTA - Subtle */}
+              <a href="#demo" className="group flex items-center space-x-3 text-gray-300 hover:text-white transition-colors py-2">
+                <div className="w-12 h-12 bg-white/10 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/20 transition-colors group-hover:scale-105">
                   <Play className="w-5 h-5 ml-1" />
                 </div>
-                <span>{t('home.hero.watchDemo')}</span>
+                <span className="font-medium tracking-wide">{t('home.hero.watchDemo')}</span>
               </a>
             </div>
           </div>
@@ -145,6 +160,15 @@ const Home = () => {
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-4 -right-4 w-72 h-72 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
           <div className="absolute bottom-20 -left-8 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl animate-pulse" style={{animationDelay: '1s'}}></div>
+        </div>
+
+        {/* Flow Indicator */}
+        <div className="flex justify-center pb-8">
+          <div className="flex flex-col items-center">
+            <div className="text-gray-400 text-sm mb-2">{t('home.flow.seeHowItWorks', 'See how it works')}</div>
+            <div className="w-0.5 h-12 bg-gradient-to-b from-purple-500 to-transparent"></div>
+            <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce"></div>
+          </div>
         </div>
       </section>
 
@@ -274,23 +298,34 @@ const Home = () => {
                 </div>
               </div>
             </div>
+
+
+          </div>
+        </div>
+
+        {/* Flow Indicator */}
+        <div className="flex justify-center py-8">
+          <div className="flex flex-col items-center">
+            <div className="text-gray-400 text-sm mb-2">{t('home.flow.exploreFeatures', 'Explore our features')}</div>
+            <div className="w-0.5 h-12 bg-gradient-to-b from-purple-500 to-transparent"></div>
+            <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce"></div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-20 px-6 relative overflow-hidden">
+      <section id="features" className="py-16 px-6 relative overflow-hidden">
         {/* Animated Background Elements */}
         <div className="absolute inset-0">
           {/* Floating Audio Waves */}
-          <div className="absolute top-20 left-10 w-32 h-32 opacity-10">
+          <div className="absolute top-16 left-8 w-24 h-24 opacity-10">
             <div className="flex items-end space-x-1 h-full">
-              {Array.from({ length: 8 }, (_, i) => (
+              {Array.from({ length: 6 }, (_, i) => (
                 <div
                   key={i}
-                  className="bg-gradient-to-t from-purple-500 to-pink-500 w-2 animate-pulse"
+                  className="bg-gradient-to-t from-purple-500 to-pink-500 w-1.5 animate-pulse"
                   style={{
-                    height: `${30 + Math.sin(Date.now() / 1000 + i) * 50}%`,
+                    height: `${30 + Math.sin(Date.now() / 1000 + i) * 40}%`,
                     animationDelay: `${i * 0.1}s`,
                     animationDuration: `${1 + i * 0.1}s`
                   }}
@@ -300,30 +335,30 @@ const Home = () => {
           </div>
           
           {/* Video Frame Elements */}
-          <div className="absolute top-32 right-16 w-24 h-16 border-2 border-purple-400/20 rounded opacity-20 animate-pulse"></div>
-          <div className="absolute bottom-32 left-1/4 w-20 h-12 border-2 border-pink-400/20 rounded opacity-20 animate-pulse" style={{animationDelay: '1s'}}></div>
+          <div className="absolute top-24 right-12 w-18 h-12 border-2 border-purple-400/20 rounded opacity-20 animate-pulse"></div>
+          <div className="absolute bottom-24 left-1/4 w-16 h-10 border-2 border-pink-400/20 rounded opacity-20 animate-pulse" style={{animationDelay: '1s'}}></div>
           
           {/* Connecting Lines */}
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-0.5 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-72 h-0.5 bg-gradient-to-r from-transparent via-purple-500/30 to-transparent"></div>
         </div>
 
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center mb-16 md:mb-24">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4">
               {t('home.features.title')} <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('home.features.titleHighlight')}</span>
             </h2>
-            <p className="text-lg sm:text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
               {t('home.features.subtitle')}
             </p>
           </div>
 
           {/* Features Grid with Creative Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-10">
             {features.map((feature, index) => (
               <div key={index} className="group relative">
                 
                 {/* Feature Card with Advanced Design */}
-                <div className="relative bg-gradient-to-br from-slate-800/40 via-purple-900/20 to-slate-800/40 backdrop-blur-xl border border-purple-500/20 rounded-3xl p-8 overflow-hidden transform transition-all duration-700 hover:scale-105 hover:border-purple-400/40">
+                <div className="relative bg-gradient-to-br from-slate-800/40 via-purple-900/20 to-slate-800/40 backdrop-blur-xl border border-purple-500/20 rounded-3xl p-6 overflow-hidden transform transition-all duration-700 hover:scale-105 hover:border-purple-400/40">
                   
                   {/* Animated Background Pattern */}
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
@@ -366,20 +401,20 @@ const Home = () => {
                   {/* Content */}
                   <div className="relative z-10">
                     {/* Icon with Enhanced Design */}
-                    <div className="mb-6 relative">
-                      <div className="w-16 h-16 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-2xl flex items-center justify-center backdrop-blur-sm border border-purple-400/20 group-hover:scale-110 transition-transform duration-500">
-                        <div className="text-purple-400 group-hover:text-purple-300 transition-colors">
+                    <div className="mb-4 relative">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-xl flex items-center justify-center backdrop-blur-sm border border-purple-400/20 group-hover:scale-110 transition-transform duration-500">
+                        <div className="text-purple-400 group-hover:text-purple-300 transition-colors text-xl">
                           {feature.icon}
                         </div>
                       </div>
                       
                       {/* Processing Indicator */}
-                      <div className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+                      <div className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-400 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
                       </div>
                     </div>
 
-                    <h3 className="text-2xl font-bold mb-4 group-hover:text-purple-300 transition-colors">
+                    <h3 className="text-xl font-bold mb-3 group-hover:text-purple-300 transition-colors">
                       {feature.title}
                     </h3>
                     
@@ -388,7 +423,7 @@ const Home = () => {
                     </p>
 
                     {/* Progress Bar Animation */}
-                    <div className="mt-6 relative">
+                    <div className="mt-4 relative">
                       <div className="w-full h-1 bg-gray-700 rounded-full overflow-hidden">
                         <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transform -translate-x-full group-hover:translate-x-0 transition-transform duration-1000 ease-out"></div>
                       </div>
@@ -405,12 +440,21 @@ const Home = () => {
                 
                 {/* Connection Lines Between Features */}
                 {index < features.length - 1 && (
-                  <div className="hidden lg:block absolute top-1/2 left-full w-16 h-0.5 bg-gradient-to-r from-purple-500/50 to-transparent transform -translate-y-1/2 z-0">
-                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-2 h-2 bg-purple-400 rounded-full animate-pulse"></div>
+                  <div className="hidden lg:block absolute top-1/2 left-full w-12 h-0.5 bg-gradient-to-r from-purple-500/50 to-transparent transform -translate-y-1/2 z-0">
+                    <div className="absolute right-0 top-1/2 transform -translate-y-1/2 w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse"></div>
                   </div>
                 )}
               </div>
             ))}
+          </div>
+        </div>
+
+        {/* Flow Indicator */}
+        <div className="flex justify-center py-8">
+          <div className="flex flex-col items-center">
+            <div className="text-gray-400 text-sm mb-2">{t('home.flow.choosePlan', 'Choose your plan')}</div>
+            <div className="w-0.5 h-12 bg-gradient-to-b from-purple-500 to-transparent"></div>
+            <div className="w-3 h-3 bg-purple-500 rounded-full animate-bounce"></div>
           </div>
         </div>
       </section>
@@ -419,7 +463,7 @@ const Home = () => {
       <section id="pricing" className="py-20 px-6">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 md:mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 md:mb-6">
               {t('home.pricing.title')} <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">{t('home.pricing.titleHighlight')}</span> {t('home.pricing.titleSuffix')}
             </h2>
             <p className="text-lg sm:text-xl text-gray-300">
@@ -455,9 +499,11 @@ const Home = () => {
                 </li>
               </ul>
               
-              <button className="w-full border border-white/20 hover:border-purple-500/50 py-3 rounded-full font-semibold transition-colors">
-                {t('home.pricing.free.button')}
-              </button>
+              <Link to="/editor">
+                <button className="w-full border-2 border-white/30 hover:border-purple-500/70 hover:bg-purple-500/10 py-4 rounded-full font-semibold transition-all hover:scale-[1.02] text-white">
+                  {t('home.pricing.free.button')}
+                </button>
+              </Link>
             </div>
 
             {/* Pro Plan */}
@@ -498,9 +544,12 @@ const Home = () => {
                 </li>
               </ul>
               
-              <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 py-3 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                {t('home.pricing.pro.button')}
-              </button>
+              <Link to="/editor">
+                <button className="w-full bg-gradient-to-r from-purple-500 to-pink-500 py-4 rounded-full font-bold text-lg hover:shadow-2xl hover:shadow-purple-500/25 hover:scale-105 transition-all text-white border-0 flex items-center justify-center space-x-2">
+                  <span>{t('home.pricing.pro.button')}</span>
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -517,20 +566,48 @@ const Home = () => {
               {t('home.cta.description')}
             </p>
             
-            <div className="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-6">
-              <Link to="/editor">
-                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-8 py-4 rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2">
+            <div className="flex flex-col items-center justify-center space-y-6">
+              {/* Primary CTA */}
+              <Link to="/editor" className="group">
+                <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-12 py-5 rounded-full font-bold text-xl hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-3 text-white border-0 min-w-[300px] justify-center">
                   <span>{t('home.cta.button')}</span>
-                  <ArrowRight className="w-5 h-5" />
+                  <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
                 </button>
               </Link>
-              <div className="text-gray-400 text-sm">
-                {t('home.cta.noCard')} <br/> {t('home.cta.cancelAnytime')}
+              
+              {/* Trust Indicators */}
+              <div className="text-center">
+                <div className="flex items-center justify-center space-x-4 text-xs text-gray-500">
+                  <div className="flex items-center space-x-1">
+                    <CheckCircle className="w-3 h-3 text-green-400" />
+                    <span>{t('home.cta.freeStart', 'Free to start')}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <CheckCircle className="w-3 h-3 text-green-400" />
+                    <span>{t('home.cta.instantAccess', 'Instant access')}</span>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                    <CheckCircle className="w-3 h-3 text-green-400" />
+                    <span>{t('home.cta.noInstall', 'No installation')}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Floating CTA */}
+      {showFloatingCTA && (
+        <div className="fixed bottom-6 right-6 z-40 animate-in slide-in-from-bottom-4 duration-300">
+          <Link to="/editor" className="group">
+            <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-3 rounded-full font-bold hover:shadow-2xl hover:shadow-purple-500/25 transition-all hover:scale-105 flex items-center space-x-2 text-white border-0 shadow-xl">
+              <span>{t('home.floating.enhanceAudio', 'Enhance Audio')}</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </button>
+          </Link>
+        </div>
+      )}
 
       <Footer/>
     </div>

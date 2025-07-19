@@ -137,10 +137,6 @@ const Header = () => {
             </Link>
             {isLoggedIn ? (
               <div className="flex items-center space-x-8">
-                <Link to="/projects" className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                  {t('navigation.projects')}
-                </Link>
-                
                 {/* User Menu */}
                 <div className="relative group">
                   <button className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
@@ -214,9 +210,6 @@ const Header = () => {
             </Link>
             {isLoggedIn ? (
               <>
-                <Link to="/projects" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
-                  {t('navigation.projects')}
-                </Link>
                 {userInfo && (
                   <div className="py-3 px-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
                     <div className="text-gray-300 text-sm font-medium">
