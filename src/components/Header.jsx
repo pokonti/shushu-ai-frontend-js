@@ -123,20 +123,19 @@ const Header = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="hover:text-purple-300 transition-colors">{t('navigation.features')}</a>
-            <a href="#pricing" className="hover:text-purple-300 transition-colors">{t('navigation.pricing')}</a>
-            <Link to="/editor">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                {t('navigation.getStarted')}
-              </button>
-            </Link>
-            <Link to="/shorts">
-              <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                Shorts
-              </button>
-            </Link>
+            <a href="#features" className="hover:text-purple-300 transition-colors font-medium">{t('navigation.features')}</a>
+            <a href="#demo" className="hover:text-purple-300 transition-colors font-medium">{t('navigation.demo', 'Demo')}</a>
+            <a href="#pricing" className="hover:text-purple-300 transition-colors font-medium">{t('navigation.pricing')}</a>
+            
             {isLoggedIn ? (
-              <div className="flex items-center space-x-8">
+              <div className="flex items-center space-x-6">
+                <Link to="/editor" className="text-gray-300 hover:text-purple-300 transition-colors font-medium">
+                  {t('navigation.editor', 'Editor')}
+                </Link>
+                <Link to="/shorts" className="text-gray-300 hover:text-purple-300 transition-colors font-medium">
+                  {t('navigation.shorts', 'Shorts')}
+                </Link>
+                
                 {/* User Menu */}
                 <div className="relative group">
                   <button className="flex items-center space-x-2 text-gray-300 hover:text-white transition-colors">
@@ -174,13 +173,16 @@ const Header = () => {
                 </div>
               </div>
             ) : (
-              <>
-                <Link to="/login">
-                  <button className="bg-gradient-to-r from-purple-500 to-pink-500 px-6 py-2 rounded-full font-semibold hover:shadow-lg hover:scale-105 transition-all">
-                    {t('navigation.login')}
+              <div className="flex items-center space-x-4">
+                <Link to="/login" className="text-gray-300 hover:text-purple-300 transition-colors font-medium">
+                  {t('navigation.login')}
+                </Link>
+                <Link to="/editor">
+                  <button className="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-2.5 rounded-full font-semibold text-sm hover:shadow-lg hover:scale-105 transition-all border border-purple-400/20 hover:border-purple-300/40">
+                    {t('navigation.getStarted')}
                   </button>
                 </Link>
-              </>
+              </div>
             )}
             
             {/* Language Switcher */}
@@ -201,15 +203,16 @@ const Header = () => {
         <div className="md:hidden absolute left-0 right-0 top-full bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-slate-900/95 backdrop-blur-xl border-b border-purple-500/20 z-50 shadow-xl">
           <div className="px-6 py-6 space-y-3">
             <a href="#features" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.features')}</a>
+            <a href="#demo" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.demo', 'Demo')}</a>
             <a href="#pricing" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.pricing')}</a>
-            <Link to="/editor" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
-              {t('navigation.getStarted')}
-            </Link>
-            <Link to="/shorts" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
-              Shorts
-            </Link>
             {isLoggedIn ? (
               <>
+                <Link to="/editor" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
+                  {t('navigation.editor', 'Editor')}
+                </Link>
+                <Link to="/shorts" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
+                  {t('navigation.shorts', 'Shorts')}
+                </Link>
                 {userInfo && (
                   <div className="py-3 px-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
                     <div className="text-gray-300 text-sm font-medium">
@@ -217,6 +220,11 @@ const Header = () => {
                     </div>
                   </div>
                 )}
+                <Link to="/editor" className="block mt-4">
+                  <button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-4 px-6 rounded-xl font-semibold hover:shadow-lg transition-all text-white text-center border border-purple-400/20">
+                    {t('navigation.getStarted')}
+                  </button>
+                </Link>
                 <button
                   onClick={handleLogout}
                   className="w-full py-3 px-4 rounded-xl hover:bg-red-500/20 hover:text-red-300 transition-all duration-200 font-medium flex items-center space-x-2"
@@ -226,9 +234,19 @@ const Header = () => {
                 </button>
               </>
             ) : (
-              <Link to="/login" className="block py-3 px-4 rounded-xl hover:bg-blue-500/20 hover:text-blue-300 transition-all duration-200 font-medium">
-                {t('navigation.login')}
-              </Link>
+              <>
+                <Link to="/shorts" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
+                  {t('navigation.shorts', 'Shorts')}
+                </Link>
+                <Link to="/login" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
+                  {t('navigation.login')}
+                </Link>
+                <Link to="/editor" className="block mt-4">
+                  <button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 py-4 px-6 rounded-xl font-semibold hover:shadow-lg transition-all text-white text-center border border-purple-400/20">
+                    {t('navigation.getStarted')}
+                  </button>
+                </Link>
+              </>
             )}
             
             {/* Mobile Language Switcher */}

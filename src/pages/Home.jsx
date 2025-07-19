@@ -22,9 +22,14 @@ const Home = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show floating CTA after scrolling past hero section until end of page
+      // Show floating CTA after scrolling past hero section but hide before final CTA section
       const scrollPosition = window.scrollY;
-      setShowFloatingCTA(scrollPosition > 800);
+      const documentHeight = document.documentElement.scrollHeight;
+      const windowHeight = window.innerHeight;
+      const distanceFromBottom = documentHeight - (scrollPosition + windowHeight);
+      
+      // Show CTA when scrolled past 800px AND more than 900px from bottom (before final CTA section)
+      setShowFloatingCTA(scrollPosition > 800 && distanceFromBottom > 900);
     };
     
     window.addEventListener('scroll', handleScroll);
