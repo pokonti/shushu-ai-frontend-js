@@ -133,7 +133,7 @@ const Header = () => {
                   {t('navigation.editor', 'Editor')}
                 </Link>
                 <Link to="/shorts" className="text-gray-300 hover:text-purple-300 transition-colors font-medium">
-                  {t('navigation.shorts', 'Shorts')}
+                  Shorts
                 </Link>
                 
                 {/* User Menu */}
@@ -202,8 +202,8 @@ const Header = () => {
       {isMenuOpen && (
         <div className="md:hidden absolute left-0 right-0 top-full bg-gradient-to-br from-slate-900/95 via-purple-900/90 to-slate-900/95 backdrop-blur-xl border-b border-purple-500/20 z-50 shadow-xl">
           <div className="px-6 py-6 space-y-3">
+          <a href="#demo" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.demo', 'Demo')}</a>
             <a href="#features" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.features')}</a>
-            <a href="#demo" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.demo', 'Demo')}</a>
             <a href="#pricing" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">{t('navigation.pricing')}</a>
             {isLoggedIn ? (
               <>
@@ -211,7 +211,7 @@ const Header = () => {
                   {t('navigation.editor', 'Editor')}
                 </Link>
                 <Link to="/shorts" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
-                  {t('navigation.shorts', 'Shorts')}
+                  Shorts
                 </Link>
                 {userInfo && (
                   <div className="py-3 px-4 rounded-xl bg-purple-500/10 border border-purple-500/20">
@@ -236,7 +236,7 @@ const Header = () => {
             ) : (
               <>
                 <Link to="/shorts" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
-                  {t('navigation.shorts', 'Shorts')}
+                  Shorts
                 </Link>
                 <Link to="/login" className="block py-3 px-4 rounded-xl hover:bg-purple-500/20 hover:text-purple-300 transition-all duration-200 font-medium">
                   {t('navigation.login')}

@@ -98,7 +98,7 @@ export default function Shorts() {
   };
 
   const isValidFileType = (file) => {
-    const validExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm'];
+    const validExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm', ".HEVC"];
     return validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
   };
 
@@ -144,7 +144,8 @@ export default function Shorts() {
           generateShorts: true // This would be a new option for shorts generation
         },
         onUploadProgress,
-        pollingIntervalMs: POLLING_INTERVALS.NORMAL
+        pollingIntervalMs: POLLING_INTERVALS.NORMAL,
+        endpointPrefix: 'shorts'
       });
       
       setProgress(50); 
