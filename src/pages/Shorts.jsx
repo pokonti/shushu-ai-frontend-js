@@ -19,7 +19,7 @@ export default function Shorts() {
   const fileInputRef = useRef(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  const MAX_FILE_SIZE = 150 * 1024 * 1024; // 150MB in bytes
+  const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB in bytes
 
   useEffect(() => {
     setIsLoggedIn(AuthService.isAuthenticated());
@@ -250,6 +250,9 @@ export default function Shorts() {
                 </h3>
                 <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto">
                   {t('shorts.upload.description')}
+                </p>
+                <p className="text-xs sm:text-sm text-purple-300 mb-4 sm:mb-6">
+                  File size must be 100MB or less
                 </p>
                 <button
                   onClick={() => fileInputRef.current?.click()}

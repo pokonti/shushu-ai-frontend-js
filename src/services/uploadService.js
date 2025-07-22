@@ -203,6 +203,9 @@ async function pollJobStatus(jobId, fileType, token, onProcessingUpdate, polling
             
           case 'PENDING':
           case 'PROCESSING':
+          case 'ASSEMBLING':
+          case 'DOWNLOADING_BROLL':
+          case 'ANALYZING':
             // Continue polling
             console.log(`Job is ${jobStatus.status.toLowerCase()}...`);
             break;
