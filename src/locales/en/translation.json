@@ -219,7 +219,8 @@
     "upload": {
       "title": "Upload Your Video",
       "description": "Upload a video file to automatically generate engaging short clips with B-roll and subtitles",
-      "button": "Choose Video File"
+      "button": "Choose Video File",
+      "requirements": "File size must be 100MB or less • Vertical videos are required"
     },
     "processing": {
       "initializing": "Initializing shorts generation...",

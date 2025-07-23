@@ -252,7 +252,7 @@ export default function Shorts() {
                   {t('shorts.upload.description')}
                 </p>
                 <p className="text-xs sm:text-sm text-purple-300 mb-4 sm:mb-6">
-                  File size must be 100MB or less
+                  {t('shorts.upload.requirements')}
                 </p>
                 <button
                   onClick={() => fileInputRef.current?.click()}
