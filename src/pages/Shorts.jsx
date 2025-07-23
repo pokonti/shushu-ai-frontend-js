@@ -185,22 +185,17 @@ export default function Shorts() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="bg-slate-800/50 backdrop-blur-sm border-b border-purple-800/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              <button 
-                onClick={() => window.location.href = '/'} 
-                className="flex items-center justify-center w-10 h-10 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 hover:text-white rounded-full transition-all duration-200 border border-purple-600/30 hover:border-purple-500/50"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        
+        {/* Back Button */}
+        <div className="mb-6">
+          <button 
+            onClick={() => window.location.href = '/'} 
+            className="flex items-center justify-center w-10 h-10 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 hover:text-white rounded-full transition-all duration-200 border border-purple-600/30 hover:border-purple-500/50"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+        </div>
         
         {/* Login Required Section */}
         {!isLoggedIn ? (
