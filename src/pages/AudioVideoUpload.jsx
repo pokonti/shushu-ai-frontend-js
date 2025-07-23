@@ -223,22 +223,17 @@ export default function AudioVideoUpload() {
   return (
 
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="bg-slate-800/50 backdrop-blur-sm border-b border-purple-800/30">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              <button 
-                onClick={() => window.location.href = '/'} 
-                className="text-purple-400 hover:text-purple-300 transition-colors p-1"
-              >
-                <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
-              </button>
-            </div>
-            
-          </div>
-        </div>
-      </div>
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        
+        {/* Back Button */}
+        <div className="mb-6 -ml-2">
+          <button 
+            onClick={() => window.location.href = '/'} 
+            className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all duration-200 transform hover:scale-105"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+        </div>
         
         {/* Login Required Section */}
         {!isLoggedIn ? (
@@ -247,19 +242,14 @@ export default function AudioVideoUpload() {
         <>
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center space-x-2 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-full px-3 sm:px-4 py-2 mb-6 sm:mb-8">
-              <Zap className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs sm:text-sm text-white">{t('home.hero.badge')}</span> 
-          </div>
-          
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
             {t('upload.hero.title')}
             <br />
             <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               {t('upload.hero.titleHighlight')}
             </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
             {t('upload.hero.description')}
           </p>
         </div>

@@ -123,10 +123,9 @@ const Header = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
-            <a href="#features" className="hover:text-purple-300 transition-colors font-medium">{t('navigation.features')}</a>
             <a href="#demo" className="hover:text-purple-300 transition-colors font-medium">{t('navigation.demo', 'Demo')}</a>
+            <a href="#features" className="hover:text-purple-300 transition-colors font-medium">{t('navigation.features')}</a>
             <a href="#pricing" className="hover:text-purple-300 transition-colors font-medium">{t('navigation.pricing')}</a>
-            
             {isLoggedIn ? (
               <div className="flex items-center space-x-6">
                 <Link to="/editor" className="text-gray-300 hover:text-purple-300 transition-colors font-medium">
