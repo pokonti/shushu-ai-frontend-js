@@ -188,10 +188,10 @@ export default function Shorts() {
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         
         {/* Back Button */}
-        <div className="mb-6">
+        <div className="mb-6 -ml-2">
           <button 
             onClick={() => window.location.href = '/'} 
-            className="flex items-center justify-center w-10 h-10 bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 hover:text-white rounded-full transition-all duration-200 border border-purple-600/30 hover:border-purple-500/50"
+            className="flex items-center justify-center w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-full transition-all duration-200 transform hover:scale-105"
           >
             <ArrowLeft className="w-5 h-5" />
           </button>
