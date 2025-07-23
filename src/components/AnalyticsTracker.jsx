@@ -8,7 +8,7 @@ const trackPageView = (path) => {
     window.gtag('config', 'G-SSFNG2R1J7', {
       page_path: path,
     });
-    console.log(`GA PageView tracked for: ${path}`);
+    // console.log(`GA PageView tracked for: ${path}`);
   }
 };
 
