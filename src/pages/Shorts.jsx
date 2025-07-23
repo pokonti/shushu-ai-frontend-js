@@ -213,11 +213,6 @@ export default function Shorts() {
         <>
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center space-x-2 bg-purple-500/20 backdrop-blur-sm border border-purple-500/30 rounded-full px-3 sm:px-4 py-2 mb-6 sm:mb-8">
-              <Scissors className="w-4 h-4 text-yellow-400" />
-              <span className="text-xs sm:text-sm text-white">{t('shorts.badge')}</span> 
-          </div>
-          
           <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
             {t('shorts.title')}
             <br />
@@ -245,18 +240,18 @@ export default function Shorts() {
                 onDrop={handleDrop}
               >
                 <Upload className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-3 sm:mb-4" />
-                <h3 className="text-base sm:text-lg font-semibold text-white mb-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
                   {t('shorts.upload.title')}
                 </h3>
-                <p className="text-xs sm:text-sm text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto">
+                <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto">
                   {t('shorts.upload.description')}
                 </p>
-                <p className="text-xs text-purple-300 mb-4 sm:mb-6">
+                <p className="text-sm text-purple-300 mb-4 sm:mb-6">
                   {t('shorts.upload.requirements')}
                 </p>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 text-xs sm:text-sm"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 text-sm sm:text-base"
                 >
                   {t('shorts.upload.button')}
                 </button>
@@ -274,11 +269,11 @@ export default function Shorts() {
                   <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
                     <Video className="w-8 h-8 text-purple-400" />
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-white font-medium text-xs sm:text-sm truncate">{file.name}</h4>
-                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs">
+                      <h4 className="text-white font-medium text-sm sm:text-base truncate">{file.name}</h4>
+                      <div className="flex items-center space-x-2 sm:space-x-4 text-sm">
                         <span className="text-gray-400">{formatFileSize(file.size)}</span>
-                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-600/30 text-purple-300">
-                          VIDEO
+                        <span className="px-2 py-1 rounded-full text-sm font-medium bg-purple-600/30 text-purple-300">
+                          {t('shorts.fileInfo.videoBadge')}
                         </span>
                       </div>
                     </div>
@@ -296,8 +291,8 @@ export default function Shorts() {
                 {isProcessing && (
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs text-gray-300 truncate pr-2">{progressMessage}</span>
-                      <span className="text-xs text-purple-300 flex-shrink-0">{Math.round(progress)}%</span>
+                      <span className="text-sm sm:text-base text-gray-300 truncate pr-2">{progressMessage}</span>
+                      <span className="text-sm sm:text-base text-purple-300 flex-shrink-0">{Math.round(progress)}%</span>
                     </div>
                     <div className="w-full bg-slate-600 rounded-full h-2">
                       <div 
@@ -310,8 +305,8 @@ export default function Shorts() {
                 
                 {uploadResult && !isProcessing && (
                   <div className="mb-4 p-3 sm:p-4 bg-slate-600/30 rounded-lg">
-                    <h5 className="text-white font-medium mb-2 text-xs sm:text-sm">{t('shorts.processing.uploadStatus')}</h5>
-                    <div className="text-xs text-gray-300 space-y-1">
+                    <h5 className="text-white font-medium mb-2 text-sm sm:text-base">{t('shorts.processing.uploadStatus')}</h5>
+                    <div className="text-sm text-gray-300 space-y-1">
                       <p><span className="text-purple-300">{t('upload.fileInfo.status')}:</span> {uploadResult.message}</p>
                       <p><span className="text-purple-300">{t('upload.fileInfo.fileId')}:</span> <span className="break-all">{uploadResult.file_id}</span></p>
                       <p><span className="text-purple-300">{t('upload.fileInfo.type')}:</span> {t('shorts.processing.videoProcessing')}</p>
@@ -323,9 +318,9 @@ export default function Shorts() {
                   <div className="p-3 sm:p-4 bg-green-600/10 border border-green-600/30 rounded-lg mb-4 sm:mb-6">
                     <div className="flex items-center space-x-2 mb-2">
                       <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                      <h5 className="text-green-400 font-medium text-xs sm:text-sm">{t('shorts.success.title')}</h5>
+                      <h5 className="text-green-400 font-medium text-sm sm:text-base">{t('shorts.success.title')}</h5>
                     </div>
-                    <div className="text-xs text-gray-300">
+                    <div className="text-sm text-gray-300">
                       <p>{t('shorts.success.description')}</p>
                       
                       {processResult.public_url && (
@@ -353,8 +348,8 @@ export default function Shorts() {
               <div className="flex items-center space-x-3">
                 <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 flex-shrink-0" />
                 <div>
-                  <h3 className="text-red-400 font-medium text-xs sm:text-sm">{t('shorts.errors.title')}</h3>
-                  <p className="text-red-300 text-xs mt-1 break-words">{error}</p>
+                  <h3 className="text-red-400 font-medium text-sm sm:text-base">{t('shorts.errors.title')}</h3>
+                  <p className="text-red-300 text-sm mt-1 break-words">{error}</p>
                 </div>
               </div>
             </div>
@@ -366,7 +361,7 @@ export default function Shorts() {
               <button
                 onClick={handleGenerate}
                 disabled={isProcessing}
-                className={`px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-sm sm:text-base transition-all transform ${
+                className={`px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg transition-all transform ${
                   !isProcessing
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 hover:scale-105'
                     : 'bg-gray-600 text-gray-400 cursor-not-allowed'
@@ -375,17 +370,17 @@ export default function Shorts() {
                 {uploading ? (
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                    <span className="text-xs sm:text-sm">{t('shorts.buttons.uploadingVideo')}</span>
+                    <span className="text-sm sm:text-base">{t('shorts.buttons.uploadingVideo')}</span>
                   </div>
                 ) : processing ? (
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                    <span className="text-xs sm:text-sm">{t('shorts.buttons.generatingShorts')}</span>
+                    <span className="text-sm sm:text-base">{t('shorts.buttons.generatingShorts')}</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <Scissors className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="text-xs sm:text-sm">{t('shorts.buttons.generateShorts')}</span>
+                    <span className="text-sm sm:text-base">{t('shorts.buttons.generateShorts')}</span>
                   </div>
                 )}
               </button>

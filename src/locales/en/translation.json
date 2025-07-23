@@ -222,6 +222,9 @@
       "button": "Choose Video File",
       "requirements": "File size must be 100MB or less • Vertical videos are required"
     },
+    "fileInfo": {
+      "videoBadge": "VIDEO"
+    },
     "processing": {
       "initializing": "Initializing shorts generation...",
       "uploading": "Uploading video... {{progress}}%",
