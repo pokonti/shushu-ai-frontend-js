@@ -521,7 +521,7 @@ const Home = () => {
               
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-bold mb-2">{t('home.pricing.pro.title')}</h3>
-                {/* <div className="text-4xl font-bold mb-2">{t('home.pricing.pro.price')}</div> */}
+                <div className="text-4xl font-bold mb-2">{t('home.pricing.pro.price')}</div>
                 <div className="text-gray-400 mb-4">{t('home.pricing.pro.period')}</div>
                 <p className="text-gray-300">{t('home.pricing.pro.description')}</p>
               </div>
