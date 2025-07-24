@@ -242,15 +242,17 @@ export default function AudioVideoUpload() {
         <>
         {/* Hero Section */}
         <div className="text-center mb-8 sm:mb-12">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
+          <h1 className="text-sm font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
             {t('upload.hero.title')}
             <br />
             <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
               {t('upload.hero.titleHighlight')}
             </span>
           </h1>
-          <p className="text-sm sm:text-base md:text-lg text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
+          <p className="text-sm text-gray-300 mb-6 sm:mb-8 max-w-3xl mx-auto leading-relaxed px-4">
             {t('upload.hero.description')}
+            <br />
+            <span className="text-purple-300">Processing time: 5-20 minutes based on media size</span>
           </p>
         </div>
 
@@ -269,15 +271,15 @@ export default function AudioVideoUpload() {
                 onDrop={handleDrop}
               >
                 <Upload className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-3 sm:mb-4" />
-                <h3 className="text-lg sm:text-xl font-semibold text-white mb-2">
+                <h3 className="text-sm font-semibold text-white mb-2">
                   {t('upload.uploadArea.title')}
                 </h3>
-                <p className="text-sm sm:text-base text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto">
+                <p className="text-sm text-gray-400 mb-4 sm:mb-6 max-w-md mx-auto">
                   {t('upload.uploadArea.description')}
                 </p>
                 <button
                   onClick={() => fileInputRef.current?.click()}
-                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 text-sm sm:text-base"
+                  className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-6 sm:px-8 py-2.5 sm:py-3 rounded-full font-medium hover:from-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 text-sm"
                 >
                   {t('upload.uploadArea.button')}
                 </button>
@@ -295,10 +297,10 @@ export default function AudioVideoUpload() {
                   <div className="flex items-center space-x-3 sm:space-x-4 min-w-0 flex-1">
                     {getFileIcon(file)}
                     <div className="min-w-0 flex-1">
-                      <h4 className="text-white font-medium text-sm sm:text-base truncate">{file.name}</h4>
-                      <div className="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
+                      <h4 className="text-white font-medium text-sm truncate">{file.name}</h4>
+                      <div className="flex items-center space-x-2 sm:space-x-4 text-sm">
                         <span className="text-gray-400">{formatFileSize(file.size)}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        <span className={`px-2 py-1 rounded-full text-sm font-medium ${
                           fileType === 'video' ? 'bg-purple-600/30 text-purple-300' : 'bg-pink-600/30 text-pink-300'
                         }`}>
                           {fileType?.toUpperCase()}
@@ -319,8 +321,8 @@ export default function AudioVideoUpload() {
                 {isProcessing && (
                   <div className="mb-4">
                     <div className="flex items-center justify-between mb-2">
-                      <span className="text-xs sm:text-sm text-gray-300 truncate pr-2">{progressMessage}</span>
-                      <span className="text-xs sm:text-sm text-purple-300 flex-shrink-0">{Math.round(progress)}%</span>
+                      <span className="text-xs text-gray-300 truncate pr-2">{progressMessage}</span>
+                      <span className="text-xs text-purple-300 flex-shrink-0">{Math.round(progress)}%</span>
                     </div>
                     <div className="w-full bg-slate-600 rounded-full h-2">
                       <div 
@@ -333,8 +335,8 @@ export default function AudioVideoUpload() {
                 
                 {uploadResult && !isProcessing && (
                   <div className="mb-4 p-3 sm:p-4 bg-slate-600/30 rounded-lg">
-                    <h5 className="text-white font-medium mb-2 text-sm sm:text-base">{t('upload.fileInfo.status')}:</h5>
-                    <div className="text-xs sm:text-sm text-gray-300 space-y-1">
+                    <h5 className="text-white font-medium mb-2 text-sm">{t('upload.fileInfo.status')}:</h5>
+                    <div className="text-sm text-gray-300 space-y-1">
                       <p><span className="text-purple-300">{t('upload.fileInfo.status')}:</span> {uploadResult.message}</p>
                       <p><span className="text-purple-300">{t('upload.fileInfo.fileId')}:</span> <span className="break-all">{uploadResult.file_id}</span></p>
                       <p><span className="text-purple-300">{t('upload.fileInfo.type')}:</span> {fileType} {t('upload.fileInfo.type')}</p>
@@ -347,9 +349,9 @@ export default function AudioVideoUpload() {
                   <div className="p-3 sm:p-4 bg-green-600/10 border border-green-600/30 rounded-lg mb-4 sm:mb-6">
                     <div className="flex items-center space-x-2 mb-2">
                       <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
-                      <h5 className="text-green-400 font-medium text-sm sm:text-base">{t('upload.processing.complete')}</h5>
+                      <h5 className="text-green-400 font-medium text-sm">{t('upload.processing.complete')}</h5>
                     </div>
-                    <div className="text-xs sm:text-sm text-gray-300">
+                    <div className="text-sm text-gray-300">
                       <p>{t('upload.processing.description', { type: fileType })}</p>
                       
                      
@@ -381,8 +383,8 @@ export default function AudioVideoUpload() {
               <div className="flex items-center space-x-3">
                 <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-red-400 flex-shrink-0" />
                 <div>
-                  <h3 className="text-red-400 font-medium text-sm sm:text-base">{t('upload.errors.processingError')}</h3>
-                  <p className="text-red-300 text-xs sm:text-sm mt-1 break-words">{error}</p>
+                  <h3 className="text-red-400 font-medium text-sm">{t('upload.errors.processingError')}</h3>
+                  <p className="text-red-300 text-sm mt-1 break-words">{error}</p>
                 </div>
               </div>
             </div>
@@ -391,7 +393,7 @@ export default function AudioVideoUpload() {
           {/* Option Selection */}
           {file && !processResult && (
             <div className="mb-6 sm:mb-8">
-              <h3 className="text-white font-semibold text-lg sm:text-xl mb-4 text-center">
+              <h3 className="text-white font-semibold text-sm mb-4 text-center">
                 {t('upload.options.title', 'Choose Processing Option')}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -410,8 +412,8 @@ export default function AudioVideoUpload() {
                   <div className="flex flex-col items-center mb-2">
                     <CheckCircle2 className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${selectedOption === 'denoise' ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
-                  <span className="font-semibold text-white text-base sm:text-lg text-center">{t('upload.options.denoise.title')}</span>
-                  <span className="text-gray-300 text-center text-xs sm:text-sm mt-2">
+                  <span className="font-semibold text-white text-sm text-center">{t('upload.options.denoise.title')}</span>
+                  <span className="text-gray-300 text-center text-sm mt-2">
                     {t('upload.options.denoise.description')}
                   </span>
                 </div>
@@ -431,8 +433,8 @@ export default function AudioVideoUpload() {
                   <div className="flex flex-col items-center mb-2">
                     <X className={`w-6 h-6 sm:w-8 sm:h-8 mb-2 ${selectedOption === 'removeFillers' ? 'text-purple-400' : 'text-gray-400'}`} />
                   </div>
-                  <span className="font-semibold text-white text-base sm:text-lg text-center">{t('upload.options.removeFillers.title')}</span>
-                  <span className="text-gray-300 text-center text-xs sm:text-sm mt-2">
+                  <span className="font-semibold text-white text-sm text-center">{t('upload.options.removeFillers.title')}</span>
+                  <span className="text-gray-300 text-center text-sm mt-2">
                     {t('upload.options.removeFillers.description')}
                   </span>
                 </div>
@@ -446,7 +448,7 @@ export default function AudioVideoUpload() {
               <button
                 onClick={handleProcess}
                 disabled={isProcessing}
-                className={`px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-base sm:text-lg transition-all transform ${
+                className={`px-8 sm:px-12 py-3 sm:py-4 rounded-full font-semibold text-sm transition-all transform ${
                   !isProcessing
                     ? 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600 hover:scale-105'
                     : 'bg-gray-600 text-gray-400 cursor-not-allowed'
@@ -455,17 +457,17 @@ export default function AudioVideoUpload() {
                 {uploading ? (
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                    <span className="text-sm sm:text-base">{t('upload.buttons.uploading')}</span>
+                    <span className="text-sm">{t('upload.buttons.uploading')}</span>
                   </div>
                 ) : processing ? (
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
-                    <span className="text-sm sm:text-base">{t('upload.buttons.processing', { type: fileType })}</span>
+                    <span className="text-sm">{t('upload.buttons.processing', { type: fileType })}</span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2 sm:space-x-3">
                     <Play className="w-4 h-4 sm:w-5 sm:h-5" />
-                    <span className="text-sm sm:text-base">{t('upload.buttons.process', { type: fileType?.charAt(0).toUpperCase() + fileType?.slice(1) })}</span>
+                    <span className="text-sm">{t('upload.buttons.process', { type: fileType?.charAt(0).toUpperCase() + fileType?.slice(1) })}</span>
                   </div>
                 )}
               </button>
