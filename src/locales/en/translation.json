@@ -151,7 +151,8 @@
     "hero": {
       "title": "Transform Your Media",
       "titleHighlight": "With AI Processing",
-      "description": "Upload your audio or video files and let our AI process them with advanced algorithms tailored for each media type."
+      "description": "Upload your audio or video files and let our AI process them with advanced algorithms tailored for each media type.",
+      "processingTime": "Processing time: 5-20 minutes based on media size"
     },
     "loginRequired": {
       "title": "Please log in to upload your media",
