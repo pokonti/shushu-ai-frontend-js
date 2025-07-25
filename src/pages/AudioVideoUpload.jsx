@@ -360,8 +360,9 @@ export default function AudioVideoUpload() {
                           <a 
                             href={processResult.public_url} // Use the new flat property
                             className="text-purple-400 hover:text-purple-300 underline break-all"
-                            target="_blank"
+                            // target="_blank"
                             rel="noopener noreferrer"
+                            download="shushu_ai_processed.mp4" 
                           >
                             {t('upload.processing.downloadLink')}
                           </a>
