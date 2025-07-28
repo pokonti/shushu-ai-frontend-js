@@ -103,15 +103,15 @@ export default function AudioVideoUpload() {
   };
 
   const isValidFileType = (file) => {
-    const validExtensions = ['.mp4', '.mov', '.mkv', '.mp3', '.wav'];
+    const validExtensions = ['.mp4', '.mov', '.mkv', '.mp3', '.wav', '.MP4', '.MOV', '.MKV', '.MP3', '.WAV'];
     const fileName = file.name.toLowerCase().trim();
     const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
     return validExtensions.includes(fileExtension);
   };
 
   const getFileType = (file) => {
-    const videoExtensions = ['.mp4', '.mov', '.mkv'];
-    const audioExtensions = ['.mp3', '.wav'];
+    const videoExtensions = ['.mp4', '.mov', '.mkv', '.MP4', '.MOV', '.MKV'];
+    const audioExtensions = ['.mp3', '.wav', '.MP3', '.WAV'];
     
     const fileName = file.name.toLowerCase().trim();
     const fileExtension = fileName.substring(fileName.lastIndexOf('.'));
