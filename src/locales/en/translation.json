@@ -211,7 +211,7 @@
     "badge": "AI-Powered Video Editing",
     "title": "Generate Viral",
     "titleHighlight": "Short Videos",
-    "description": "Transform your long-form videos into engaging shorts by automatically extracting the most important clips, adding relevant B-roll footage, and generating synchronized subtitles to maximize viewer engagement.",
+    "description": "Transform your videos into engaging shorts by automatically extracting the most important clips, adding relevant B-roll footage to maximize viewer engagement.",
     "loginRequired": {
       "badge": "Authentication Required",
       "title": "Login Required",

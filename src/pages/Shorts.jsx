@@ -98,7 +98,7 @@ export default function Shorts() {
   };
 
   const isValidFileType = (file) => {
-    const validExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm', ".HEVC"];
+    const validExtensions = ['.mp4', '.mov', '.mkv', '.avi', '.webm', ".HEVC", ".MP4", ".MOV", ".MKV", ".AVI", ".WEBM"];
     return validExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
   };
 
@@ -253,7 +253,7 @@ export default function Shorts() {
                 <input
                   ref={fileInputRef}
                   type="file"
-                  accept=".mp4,.mov,.mkv,.avi,.webm"
+                  accept=".mp4,.mov,.mkv,.avi,.webm,.MP4,.MOV,.MKV,.AVI,.WEBM"
                   onChange={handleFileSelect}
                   className="hidden"
                 />
